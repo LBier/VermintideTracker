@@ -1,0 +1,61 @@
+/*Google Font*/
+@import url("https://fonts.googleapis.com/css?family=Open Sans:300,400,600");
+
+/*Allgemein*/
+html {
+    background-color: #f1f4f5;
+    font: 300 14px/18px "Open Sans", sans-serif;
+}
+
+a, a:hover {
+    text-decoration: none;
+}
+
+/*Info*/
+#info ul > li {
+    padding: 0;
+}
+#info ul > li > a:hover {
+    background-color: rgba(0,0,0,0.2);
+}
+#info ul > li > a {
+    color: #000000;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease-in-out 0s;
+}
+#info {
+	font-size: 32px;
+    font-weight: 400;
+	color: #ffffff;
+	text-align: center;
+	padding: 20px;
+}
+
+/*Content*/
+#content::before {
+    background-color: rgba(0, 0, 0, 0.06);
+    bottom: 0;
+    content: "";
+    left: 0;
+    opacity: 0.1;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+#content {
+    box-sizing: border-box;
+    min-height: 100vh;
+    padding: 40px;
+    position: relative;
+}
+#result_text {
+	color: red;
+}
+.uk-button:hover {
+    background-color: #ccc;
+    transition: all 0.3s ease-in-out 0s;
+}
+.uk-card-primary {
+    background-color: #be160b;
+}
