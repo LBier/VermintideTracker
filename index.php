@@ -28,5 +28,29 @@ $id_run = get_request("id_run");
 				?>
 			</div>
 		</div>
+        <script>
+            $( document ).ready(function() {
+
+                var first_dlc = $('#dlc_dropdown').find("option:first-child").val();
+                get_map_options(first_dlc);
+
+                $('#dlc_dropdown').on("change", function(e) {
+                    var dlc = $(this).val();
+                    get_map_options(dlc);
+                });
+
+            });
+
+            function get_map_options(dlc) {
+                $.ajax({
+                    type: "POST",
+                    url: "get_map_options.php",
+                    data: {"dlc": dlc},
+                    success: function(data) {
+                        $('#map_dropdown').html(data);
+                    }
+                });
+            }
+        </script>
 	</body>
 </html>

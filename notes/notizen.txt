@@ -18,3 +18,5 @@ AND run.run_probability_id = pro.id_probability
 
 SELECT CONCAT(`pro_grimoire_dice`, 'g', `pro_tome_dice`, 't', `pro_extra_dice`, 'e', `pro_normal_dice`, 'n') FROM tbl_probability
 UPDATE tbl_probability SET pro_dice_string = CONCAT(`pro_grimoire_dice`, 'g', `pro_tome_dice`, 't', `pro_extra_dice`, 'e', `pro_normal_dice`, 'n')
+
+SELECT * FROM tbl_map as map, tbl_dlc as dlc WHERE dlc.id_dlc = map.map_dlc_id

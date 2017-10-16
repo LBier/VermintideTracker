@@ -61,6 +61,17 @@ if (!empty($result_text)) {
 
 
 if (isset($task) && $task == "add") {
+
+    $query = "SELECT * FROM tbl_dlc WHERE (SELECT count(id_map) FROM tbl_map WHERE map_dlc_id = id_dlc) > 0";
+    $select = $pdo->prepare($query);
+    $select->execute();
+    $dlcs = $select->fetchAll(PDO::FETCH_ASSOC);
+
+    $dlc_dropdown = '<select id="dlc_dropdown" name="run[dlc]">';
+    foreach ($dlcs as $dlc) {
+        $dlc_dropdown .= '<option value="' . $dlc['id_dlc'] . '">' . $dlc['dlc_name'] . '</option>';
+    }
+    $dlc_dropdown .= '</select>';
 	
 	$content .= '<div class="uk-width-1-1">
 		<div class="uk-card uk-card-default">
@@ -70,26 +81,30 @@ if (isset($task) && $task == "add") {
 			<div class="uk-card-body">
 				<form class="uk-form-stacked uk-grid-small" action="index.php?seite=navigation" method="post" uk-grid>
 					<div class="uk-width-1-2">
-						<label>Seite</label>
-						' . get_page_select("navigation[pg_id]", return_var($navigation, "na_pg_id"), true) . '
+						<label>DLC</label>
+						' . $dlc_dropdown . '
 					</div>
 					<div class="uk-width-1-2">
+					    <label>Map</label>
+					    <select id="map_dropdown" class="uk-select" name="run[map]"></select>
+                    </div>
+					<div class="uk-width-1-2">
 						<div style="margin-top: 30px;">
-							<input id="xActive" class="uk-checkbox" type="checkbox" name="navigation[xActive]" ' . (return_var($navigation, "na_xActive") == 1 ? 'checked' : '') . ' value="1">
+							<input id="xActive" class="uk-checkbox" type="checkbox" name="navigation[xActive]" value="1">
 							<label for="xActive">Aktiviert</label>
 						</div>
 					</div>
 					<div class="uk-width-1-1">
 						<label>Navigation</label>
-						<input class="uk-input uk-width-1-1" name="navigation[navigation]" value="' . return_var($navigation, "na_navigation") . '">
+						<input class="uk-input uk-width-1-1" name="navigation[navigation]" value="">
 					</div>
 					<div class="uk-width-1-1">
 						<label>Text</label>
-						<input class="uk-input uk-width-1-1" name="navigation[text]" value="' . return_var($navigation, "na_text") . '">
+						<input class="uk-input uk-width-1-1" name="navigation[text]" value="">
 					</div>
 					<div class="uk-width-1-1">
 						<label>Link</label>
-						<input class="uk-input uk-width-1-1" name="navigation[link]" value="' . return_var($navigation, "na_link") . '">
+						<input class="uk-input uk-width-1-1" name="navigation[link]" value="">
 					</div>
 					<div class="uk-width-1-1">
 						<input type="hidden" name="task" value="add">

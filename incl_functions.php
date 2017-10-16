@@ -12,5 +12,3 @@ function get_request($key) {
 	}
 	return null;
 }
-
-?>
