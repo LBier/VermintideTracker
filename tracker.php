@@ -62,27 +62,28 @@ if (!empty($result_text)) {
 
 if (isset($task) && $task == "add") {
 
-    $query = "SELECT * FROM tbl_dlc WHERE (SELECT count(id_map) FROM tbl_map WHERE map_dlc_id = id_dlc) > 0";
-    $select = $pdo->prepare($query);
-    $select->execute();
-    $dlcs = $select->fetchAll(PDO::FETCH_ASSOC);
-
+    $dlcs = select("SELECT * FROM tbl_dlc WHERE (SELECT count(id_map) FROM tbl_map WHERE map_dlc_id = id_dlc) > 0");
     $dlc_dropdown = '<select id="dlc_dropdown" class="uk-select uk-width-1-1" name="dlc">';
     foreach ($dlcs as $dlc) {
         $dlc_dropdown .= '<option value="' . $dlc['id_dlc'] . '">' . $dlc['dlc_name'] . '</option>';
     }
     $dlc_dropdown .= '</select>';
 
-    $query = "SELECT * FROM tbl_difficulty";
-    $select = $pdo->prepare($query);
-    $select->execute();
-    $difficulties = $select->fetchAll(PDO::FETCH_ASSOC);
-
+    $difficulties = select("SELECT * FROM tbl_difficulty");
     $difficulty_dropdown = '<select class="uk-select uk-width-1-1" name="run[difficulty_id]">';
     foreach ($difficulties as $difficulty) {
         $difficulty_dropdown .= '<option value="' . $difficulty['id_difficulty'] . '" ' . ($difficulty['dif_name'] == default_difficulty ? 'selected' : '') . '>' . $difficulty['dif_name'] . '</option>';
     }
     $difficulty_dropdown .= '</select>';
+
+    $mods = select("SELECT * FROM tbl_mod");
+    $mods_checkboxes = '<div class="uk-grid uk-grid-medium uk-grid-width-1-1" data-uk-grid-margin>';
+    foreach ($mods as $mod) {
+        $mods_checkboxes .= '<div class="uk-width-1-3">';
+        $mods_checkboxes .= '<input id="id_mod_' . $mod['id_mod'] . '" type="checkbox"><label for="id_mod_' . $mod['id_mod'] . '"> ' . $mod['mod_description'] . '</label>';
+        $mods_checkboxes .= '</div>';
+    }
+    $mods_checkboxes .= '</div>';
 
 	$content .= '<div class="uk-width-1-1">
 		<div class="uk-card uk-card-default">
@@ -91,7 +92,7 @@ if (isset($task) && $task == "add") {
 			</div>
 			<div class="uk-card-body">
 				<form class="uk-form uk-form-stacked" action="index.php?seite=navigation" method="post">
-                    <div class="uk-grid uk-grid-small" data-uk-grid-margin>
+                    <div class="uk-grid uk-grid-medium" data-uk-grid-margin>
                         <div class="uk-width-1-2">
                             <label>DLC</label>
                             ' . $dlc_dropdown . '
@@ -99,6 +100,18 @@ if (isset($task) && $task == "add") {
                         <div class="uk-width-1-2">
                             <label>Map</label>
                             <select id="map_dropdown" class="uk-select uk-width-1-1" name="run[map_id]"></select>
+                        </div>
+                        <div class="uk-width-1-3">
+                            <label>Difficulty</label>
+                            ' . $difficulty_dropdown . '
+                        </div>
+                        <div class="uk-width-1-3">
+                            <label>Duration (min)</label>
+                            <input class="uk-input uk-width-1-1" type="number" name="run[duration]">
+                        </div>
+                        <div class="uk-width-1-3">
+                            <input id="xRed" type="checkbox" name="run[xRed]">
+                            <label for="xRed">Got Red Item</label>
                         </div>
                         <div class="uk-width-1-3">
                             <label>Grimoires</label>
@@ -125,9 +138,9 @@ if (isset($task) && $task == "add") {
                                 <option>2</option>
                             </select>
                         </div>
-                        <div class="uk-width-1-3">
-                            <label>Difficulty</label>
-                            ' . $difficulty_dropdown . '
+                        <div class="uk-width-1-1">
+                            <label>Mods</label>
+                            ' . $mods_checkboxes . '
                         </div>
                         <div class="uk-width-1-2">
                             <label>Notes</label>

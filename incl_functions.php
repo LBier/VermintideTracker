@@ -12,3 +12,12 @@ function get_request($key) {
 	}
 	return null;
 }
+
+function select($query) {
+    global $pdo;
+
+    $select = $pdo->prepare($query);
+    $select->execute();
+
+    return $select->fetchAll(PDO::FETCH_ASSOC);
+}
