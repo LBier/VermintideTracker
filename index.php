@@ -13,12 +13,12 @@ $id_run = get_request("id_run");
 <html>
 	<head>
 		<title>Vermintide Stat Tracker</title>
-        <meta charset="utf-8"> 
+        <meta charset="utf-8">
         <meta name="author" content="Lukas Bier">
-		<link rel="stylesheet" href="/vermintide/template/css/styles.css">
-		<link rel="stylesheet" href="/vermintide/template/css/uikit.min.css">
-        <script src="/vermintide/template/js/jquery.min.js"></script>
-        <script src="/vermintide/template/js/uikit.min.js"></script>
+		<link rel="stylesheet" href="template/css/styles.css">
+		<link rel="stylesheet" href="template/css/uikit.min.css">
+        <script src="template/js/jquery-3.2.1.min.js"></script>
+        <script src="template/js/uikit.min.js"></script>
 	</head>
 	<body>
 		<div id="content">

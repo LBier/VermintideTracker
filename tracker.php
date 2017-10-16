@@ -194,5 +194,3 @@ if (isset($task) && $task == "add") {
 }
 
 echo $content;
-
-?>
