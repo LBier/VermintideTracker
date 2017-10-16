@@ -1,0 +1,22 @@
+pr_grimoire_dice,pr_tome_dice,pr_extra_dice,pr_normal_dice,pr_probability_zero,pr_probability_one,pr_probability_two,pr_probability_three,pr_probability_four,pr_probability_five,pr_probability_six,pr_probability_seven
+
+SELECT *, (`pr_probability_zero`+`pr_probability_one`+`pr_probability_two`+`pr_probability_three`+`pr_probability_four`+`pr_probability_five`+`pr_probability_six`+`pr_probability_seven`) as sum FROM `probability`
+
+CREATE TABLE `vermintide`.`tbl_mod` ( `id_mod` INT(11) NOT NULL AUTO_INCREMENT , `mo_name` VARCHAR(50) NOT NULL , `mo_description` VARCHAR(200) NOT NULL , `mo_extra_dice` INT(11) NOT NULL , PRIMARY KEY (`id_mod`)) ENGINE = InnoDB;
+
+CREATE TABLE `vermintide`.`tbl_map` ( `id_map` INT NOT NULL AUTO_INCREMENT , `map_dlc_id` INT NOT NULL , `map_name` VARCHAR(100) NOT NULL , `map_name_intern` VARCHAR(100) NOT NULL , `map_grimoires` INT NOT NULL , `map_tomes` INT NOT NULL , `map_chests` INT NOT NULL , PRIMARY KEY (`id_map`), INDEX (`map_dlc_id`)) ENGINE = InnoDB;
+
+CREATE TABLE `vermintide`.`tbl_dlc` ( `id_dlc` INT NOT NULL AUTO_INCREMENT , `dlc_name` VARCHAR(100) NOT NULL , PRIMARY KEY (`id_dlc`)) ENGINE = InnoDB;
+
+// großer View
+SELECT id_run, dif_name, map_name, dlc_name, run_length, pro_dice_string, run_probability_red, run_createDtTi
+FROM tbl_run as run, tbl_map as map, tbl_dlc as dlc, tbl_difficulty as dif, tbl_probability as pro
+WHERE run.run_map_id = map.id_map
+AND map.map_dlc_id = dlc.id_dlc
+AND run.run_difficulty_id = dif.id_difficulty
+AND run.run_probability_id = pro.id_probability
+
+SELECT CONCAT(`pro_grimoire_dice`, 'g', `pro_tome_dice`, 't', `pro_extra_dice`, 'e', `pro_normal_dice`, 'n') FROM tbl_probability
+UPDATE tbl_probability SET pro_dice_string = CONCAT(`pro_grimoire_dice`, 'g', `pro_tome_dice`, 't', `pro_extra_dice`, 'e', `pro_normal_dice`, 'n')
+
+SELECT * FROM tbl_map as map, tbl_dlc as dlc WHERE dlc.id_dlc = map.map_dlc_id
