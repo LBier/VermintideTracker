@@ -22,7 +22,7 @@ $id_run = get_request("id_run");
 	</head>
 	<body>
 		<div id="content">
-			<div class="uk-grid-match uk-animation-fade" uk-grid>
+			<div class="uk-grid uk-animation-fade">
 				<?
 				include "tracker.php";
 				?>

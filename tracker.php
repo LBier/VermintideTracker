@@ -67,49 +67,77 @@ if (isset($task) && $task == "add") {
     $select->execute();
     $dlcs = $select->fetchAll(PDO::FETCH_ASSOC);
 
-    $dlc_dropdown = '<select id="dlc_dropdown" name="run[dlc]">';
+    $dlc_dropdown = '<select id="dlc_dropdown" class="uk-select uk-width-1-1" name="dlc">';
     foreach ($dlcs as $dlc) {
         $dlc_dropdown .= '<option value="' . $dlc['id_dlc'] . '">' . $dlc['dlc_name'] . '</option>';
     }
     $dlc_dropdown .= '</select>';
-	
+
+    $query = "SELECT * FROM tbl_difficulty";
+    $select = $pdo->prepare($query);
+    $select->execute();
+    $difficulties = $select->fetchAll(PDO::FETCH_ASSOC);
+
+    $difficulty_dropdown = '<select class="uk-select uk-width-1-1" name="run[difficulty_id]">';
+    foreach ($difficulties as $difficulty) {
+        $difficulty_dropdown .= '<option value="' . $difficulty['id_difficulty'] . '" ' . ($difficulty['dif_name'] == default_difficulty ? 'selected' : '') . '>' . $difficulty['dif_name'] . '</option>';
+    }
+    $difficulty_dropdown .= '</select>';
+
 	$content .= '<div class="uk-width-1-1">
 		<div class="uk-card uk-card-default">
 			<div class="uk-card-header">
 				<h3 class="uk-card-title">Add a run</h3>
 			</div>
 			<div class="uk-card-body">
-				<form class="uk-form-stacked uk-grid-small" action="index.php?seite=navigation" method="post" uk-grid>
-					<div class="uk-width-1-2">
-						<label>DLC</label>
-						' . $dlc_dropdown . '
-					</div>
-					<div class="uk-width-1-2">
-					    <label>Map</label>
-					    <select id="map_dropdown" class="uk-select" name="run[map]"></select>
+				<form class="uk-form uk-form-stacked" action="index.php?seite=navigation" method="post">
+                    <div class="uk-grid uk-grid-small" data-uk-grid-margin>
+                        <div class="uk-width-1-2">
+                            <label>DLC</label>
+                            ' . $dlc_dropdown . '
+                        </div>
+                        <div class="uk-width-1-2">
+                            <label>Map</label>
+                            <select id="map_dropdown" class="uk-select uk-width-1-1" name="run[map_id]"></select>
+                        </div>
+                        <div class="uk-width-1-3">
+                            <label>Grimoires</label>
+                            <select class="uk-select uk-width-1-1" name="pro[grimoire_dice]">
+                                <option>0</option>
+                                <option>1</option>
+                                <option>2</option>
+                            </select>
+                        </div>
+                        <div class="uk-width-1-3">
+                            <label>Tomes</label>
+                            <select class="uk-select uk-width-1-1" name="pro[tome_dice]">
+                                <option>0</option>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                            </select>
+                        </div>
+                        <div class="uk-width-1-3">
+                            <label>Extra Dice</label>
+                            <select class="uk-select uk-width-1-1" name="pro[extra_dice]">
+                                <option>0</option>
+                                <option>1</option>
+                                <option>2</option>
+                            </select>
+                        </div>
+                        <div class="uk-width-1-3">
+                            <label>Difficulty</label>
+                            ' . $difficulty_dropdown . '
+                        </div>
+                        <div class="uk-width-1-2">
+                            <label>Notes</label>
+                            <textarea class="uk-width-1-1" name="run[notes]"></textarea>
+                        </div>
+                        <div class="uk-width-1-1">
+                            <input type="hidden" name="task" value="add">
+                            <input class="uk-button" type="submit" name="submit" value="Add">
+                        </div>
                     </div>
-					<div class="uk-width-1-2">
-						<div style="margin-top: 30px;">
-							<input id="xActive" class="uk-checkbox" type="checkbox" name="navigation[xActive]" value="1">
-							<label for="xActive">Aktiviert</label>
-						</div>
-					</div>
-					<div class="uk-width-1-1">
-						<label>Navigation</label>
-						<input class="uk-input uk-width-1-1" name="navigation[navigation]" value="">
-					</div>
-					<div class="uk-width-1-1">
-						<label>Text</label>
-						<input class="uk-input uk-width-1-1" name="navigation[text]" value="">
-					</div>
-					<div class="uk-width-1-1">
-						<label>Link</label>
-						<input class="uk-input uk-width-1-1" name="navigation[link]" value="">
-					</div>
-					<div class="uk-width-1-1">
-						<input type="hidden" name="task" value="add">
-						<input class="uk-button" type="submit" name="submit" value="Add">
-					</div>
 				</form>
 			</div>
 		</div>
