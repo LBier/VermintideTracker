@@ -1,34 +1,17 @@
 <?
 
+$id_run = get_request("id_run");
+$isset_id = isset($id_run);
+
 $result_text = "";
 
 if (!empty($task)) {
 	switch ($task) {
 		case "add":
 			if (!empty($_POST['run']) && $_POST['submit'] == 'Add') {
-				
-				$insert = $pdo->prepare("INSERT INTO tbl_navigation (
-					na_pg_id,
-					na_xActive,
-					na_navigation,
-					na_text,
-					na_link)
-					VALUES (?, ?, ?, ?, ?)");
-				$result = $insert->execute(array(
-					(!empty($_POST['navigation']['pg_id']) ? $_POST['navigation']['pg_id'] : NULL),
-					(isset($_POST['navigation']['xActive']) ? 1 : 0),
-					$navigation,
-					$_POST['navigation']['text'],
-					$_POST['navigation']['link']));
-				
-				if ($result === true) {
-					$id_navigation = $pdo->lastInsertId();
-					$isset_id = true;
-					$result_text .= "Run has been saved.";
-				} else {
-					$result_text .= "Error saving run.";
-				}
-				
+
+			    // save run
+
 			}
 			break;
 		case "delete":

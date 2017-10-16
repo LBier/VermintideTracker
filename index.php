@@ -5,7 +5,6 @@ require 'incl_functions.php';
 
 // $page = get_request("page");
 $task = get_request("task");
-$id_run = get_request("id_run");
 
 ?>
 
