@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 16. Okt 2017 um 18:27
+-- Erstellungszeit: 17. Okt 2017 um 16:57
 -- Server-Version: 10.1.13-MariaDB
 -- PHP-Version: 5.6.21
 
@@ -66,7 +66,7 @@ INSERT INTO `tbl_dlc` (`id_dlc`, `dlc_name`, `dlc_maps`, `dlc_release_date`) VAL
 (2, 'Drachenfels', 3, '2016-05-26'),
 (3, 'Karak Azgaraz', 3, '2016-12-15'),
 (4, 'Stromdorf', 2, '2017-05-04'),
-(5, 'Death on the Reik', 2, '2017-10-17');
+(5, 'Death on the Reik', 2, '2017-10-19');
 
 -- --------------------------------------------------------
 
@@ -121,14 +121,14 @@ CREATE TABLE `tbl_mod` (
   `id_mod` int(11) NOT NULL,
   `mod_name` varchar(50) NOT NULL,
   `mod_description` varchar(200) NOT NULL,
-  `mod_extra_dice` int(11) NOT NULL
+  `mod_extra_grimoire_dice` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Daten für Tabelle `tbl_mod`
 --
 
-INSERT INTO `tbl_mod` (`id_mod`, `mod_name`, `mod_description`, `mod_extra_dice`) VALUES
+INSERT INTO `tbl_mod` (`id_mod`, `mod_name`, `mod_description`, `mod_extra_grimoire_dice`) VALUES
 (1, 'deathwish', 'Deathwish Difficulty', 2),
 (2, 'onslaught', 'Onslaught Mode', 1),
 (3, 'stormmutation', 'Stormvermin Mutation', 1);
@@ -151,7 +151,7 @@ CREATE TABLE `tbl_parameter` (
 --
 
 INSERT INTO `tbl_parameter` (`id_parameter`, `par_name`, `par_value`, `par_description`) VALUES
-(1, 'cata_red_prob_on_6', '25', 'Chance to get a red item with a 6 on Cataclysm');
+(1, 'cata_prob_red_on_6', '25', 'Chance to get a red item with a 6 on Cataclysm');
 
 -- --------------------------------------------------------
 
@@ -270,7 +270,13 @@ CREATE TABLE `tbl_run` (
 --
 
 INSERT INTO `tbl_run` (`id_run`, `run_map_id`, `run_difficulty_id`, `run_probability_id`, `run_duration`, `run_probability_red`, `run_xRed`, `run_notes`, `run_createDtTi`) VALUES
-(1, 1, 5, 36, 21, 0.00, 0, '', '2017-10-12 12:13:59');
+(1, 14, 5, 35, 26, 10.49, 0, 'Lorem Ipsum dolor sit amet. Consicetur what the fuck am I writing, i hope this is enough.', '2017-10-17 12:58:49'),
+(2, 17, 4, 34, 18, 3.29, 0, NULL, '2017-10-17 13:27:54'),
+(3, 1, 3, 13, 27, 0.00, 0, NULL, '2017-10-17 13:28:32'),
+(4, 2, 5, 56, 26, 40.74, 1, NULL, '2017-10-17 13:44:36'),
+(5, 21, 1, 48, 40, 0.00, 0, NULL, '2017-10-17 13:47:39'),
+(6, 13, 4, 13, 18, 0.14, 0, NULL, '2017-10-17 15:48:30'),
+(7, 18, 5, 65, 10, 75.00, 1, 'ez pz', '2017-10-17 16:01:29');
 
 -- --------------------------------------------------------
 
@@ -289,9 +295,14 @@ CREATE TABLE `tbl_run_mod` (
 --
 
 INSERT INTO `tbl_run_mod` (`id_run_mod`, `rm_run_id`, `rm_mod_id`) VALUES
-(1, 1, 1),
-(2, 1, 2),
-(3, 1, 3);
+(1, 4, 1),
+(2, 5, 1),
+(3, 5, 2),
+(4, 5, 3),
+(5, 6, 2),
+(6, 7, 1),
+(7, 7, 2),
+(8, 7, 3);
 
 -- --------------------------------------------------------
 
@@ -299,6 +310,16 @@ INSERT INTO `tbl_run_mod` (`id_run_mod`, `rm_run_id`, `rm_mod_id`) VALUES
 -- Stellvertreter-Struktur des Views `vw_run`
 --
 CREATE TABLE `vw_run` (
+`id_run` int(11)
+,`dif_name` varchar(50)
+,`map_name` varchar(100)
+,`dlc_name` varchar(100)
+,`run_duration` int(11)
+,`pro_dice_string` varchar(8)
+,`run_probability_red` double(4,2)
+,`run_xRed` int(11)
+,`run_notes` text
+,`run_createDtTi` datetime
 );
 
 -- --------------------------------------------------------
@@ -308,7 +329,7 @@ CREATE TABLE `vw_run` (
 --
 DROP TABLE IF EXISTS `vw_run`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_run`  AS  select `run`.`id_run` AS `id_run`,`dif`.`dif_name` AS `dif_name`,`map`.`map_name` AS `map_name`,`dlc`.`dlc_name` AS `dlc_name`,`run`.`run_length` AS `run_length`,`pro`.`pro_dice_string` AS `pro_dice_string`,`run`.`run_probability_red` AS `run_probability_red`,`run`.`run_createDtTi` AS `run_createDtTi` from ((((`tbl_run` `run` join `tbl_map` `map`) join `tbl_dlc` `dlc`) join `tbl_difficulty` `dif`) join `tbl_probability` `pro`) where ((`run`.`run_map_id` = `map`.`id_map`) and (`map`.`map_dlc_id` = `dlc`.`id_dlc`) and (`run`.`run_difficulty_id` = `dif`.`id_difficulty`) and (`run`.`run_probability_id` = `pro`.`id_probability`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_run`  AS  select `run`.`id_run` AS `id_run`,`dif`.`dif_name` AS `dif_name`,`map`.`map_name` AS `map_name`,`dlc`.`dlc_name` AS `dlc_name`,`run`.`run_duration` AS `run_duration`,`pro`.`pro_dice_string` AS `pro_dice_string`,`run`.`run_probability_red` AS `run_probability_red`,`run`.`run_xRed` AS `run_xRed`,`run`.`run_notes` AS `run_notes`,`run`.`run_createDtTi` AS `run_createDtTi` from ((((`tbl_run` `run` join `tbl_map` `map`) join `tbl_dlc` `dlc`) join `tbl_difficulty` `dif`) join `tbl_probability` `pro`) where ((`run`.`run_map_id` = `map`.`id_map`) and (`map`.`map_dlc_id` = `dlc`.`id_dlc`) and (`run`.`run_difficulty_id` = `dif`.`id_difficulty`) and (`run`.`run_probability_id` = `pro`.`id_probability`)) ;
 
 --
 -- Indizes der exportierten Tabellen
@@ -349,7 +370,8 @@ ALTER TABLE `tbl_parameter`
 -- Indizes für die Tabelle `tbl_probability`
 --
 ALTER TABLE `tbl_probability`
-  ADD PRIMARY KEY (`id_probability`);
+  ADD PRIMARY KEY (`id_probability`),
+  ADD UNIQUE KEY `probability_unique` (`pro_grimoire_dice`,`pro_tome_dice`,`pro_extra_dice`,`pro_normal_dice`);
 
 --
 -- Indizes für die Tabelle `tbl_run`
@@ -407,12 +429,12 @@ ALTER TABLE `tbl_probability`
 -- AUTO_INCREMENT für Tabelle `tbl_run`
 --
 ALTER TABLE `tbl_run`
-  MODIFY `id_run` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_run` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT für Tabelle `tbl_run_mod`
 --
 ALTER TABLE `tbl_run_mod`
-  MODIFY `id_run_mod` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_run_mod` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- Constraints der exportierten Tabellen
 --
@@ -435,7 +457,7 @@ ALTER TABLE `tbl_run`
 -- Constraints der Tabelle `tbl_run_mod`
 --
 ALTER TABLE `tbl_run_mod`
-  ADD CONSTRAINT `tbl_run_mod_ibfk_1` FOREIGN KEY (`rm_run_id`) REFERENCES `tbl_run` (`id_run`),
+  ADD CONSTRAINT `tbl_run_mod_ibfk_1` FOREIGN KEY (`rm_run_id`) REFERENCES `tbl_run` (`id_run`) ON DELETE CASCADE,
   ADD CONSTRAINT `tbl_run_mod_ibfk_2` FOREIGN KEY (`rm_mod_id`) REFERENCES `tbl_mod` (`id_mod`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
