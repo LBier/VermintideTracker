@@ -258,6 +258,8 @@ if (isset($task) && $task == "add") {
 						<col>
 						<col>
 						<col>
+						<col>
+						<col>
 						<col width="10%">
 					</colgroup>
 					<thead>
@@ -268,6 +270,8 @@ if (isset($task) && $task == "add") {
 							<th>Duration</th>
 							<th>Dice</th>
 							<th>red %</th>
+							<th>got a red</th>
+							<th>Notes</th>
 							<th>Date</th>
 							<th></th>
 						</tr>
@@ -282,6 +286,8 @@ if (isset($task) && $task == "add") {
 									<td>' . $run['run_duration'] . ' min</td>
 									<td>' . $run['pro_dice_string'] . '</td>
 									<td>' . $run['run_probability_red'] . '%</td>
+									<td>' . ($run['run_xRed'] == 1 ? 'Yes' : 'No') . '</td>
+									<td>' . $run['run_notes'] . '</td>
 									<td>' . date("d.m.Y H:i", strtotime($run['run_createDtTi'])) . '</td>
 									<td>
 										<form action="index.php" method="post">
