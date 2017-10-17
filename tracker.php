@@ -65,7 +65,7 @@ if (!empty($task)) {
                 }
                 $inputs['run_xRed'] = isset($_POST['run']['xRed']) ? 1 : 0;
                 $inputs['run_notes'] = empty($_POST['run']['notes']) ? null : $_POST['run']['notes'];
-                dump($inputs);
+//                dump($inputs);
 
                 $query = "INSERT INTO tbl_run (run_map_id, run_difficulty_id, run_probability_id, run_duration, run_probability_red, run_xRed, run_notes) ";
                 $query .= "VALUES (:run_map_id, :run_difficulty_id, :run_probability_id, :run_duration, :run_probability_red, :run_xRed, :run_notes)";
@@ -210,9 +210,9 @@ if (isset($task) && $task == "add") {
 	
 	if (!empty($runs)) {
 		foreach ($runs as &$run) {
-			$query = "SELECT * FROM tbl_run_mod as rm, tbl_mod as `mod` WHERE rm.rm_mod_id = `mod`.id_mod AND rm.rm_run_id = ?";
+			$query = "SELECT * FROM tbl_run_mod as rm, tbl_mod as `mod` WHERE rm.rm_mod_id = `mod`.id_mod AND rm.rm_run_id = :rm_run_id";
 			$select = $pdo->prepare($query);
-			$select->execute(array($run['id_run']));
+			$select->execute(array("rm_run_id" => $run['id_run']));
 			$run['mods'] = $select->fetchAll(PDO::FETCH_ASSOC);
 
 			$run['rendered_mods'] = '';
@@ -223,9 +223,9 @@ if (isset($task) && $task == "add") {
 			}
 		}
 	}
-	// dump($runs);
-	// exit;
-	
+//    dump($runs);
+//    exit;
+
 	$content .= '<div class="uk-width-1-1">
 		<div class="uk-card uk-card-default">
 			<div class="uk-card-header">
@@ -261,7 +261,7 @@ if (isset($task) && $task == "add") {
 					</thead>
 					<tbody>';
 						if (!empty($runs)) {
-							foreach ($runs as $run) {
+							foreach ($runs as &$run) {
 								$content .= '<tr>
 									<td>' . $run['dif_name'] . '</td>
 									<td>' . $run['rendered_mods'] . '</td>
@@ -284,7 +284,7 @@ if (isset($task) && $task == "add") {
 								</tr>';
 							}
 						} else {
-							$content .= '<tr><td>No runs available</td></tr>';
+							$content .= '<tr><td colspan="8">No runs available</td></tr>';
 						}
 					$content .= '</tbody>
 				</table>
