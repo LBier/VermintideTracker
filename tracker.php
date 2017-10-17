@@ -125,7 +125,7 @@ if (isset($task) && $task == "add") {
     $dlc_dropdown .= '</select>';
 
     $difficulties = select("SELECT * FROM tbl_difficulty");
-    $difficulty_dropdown = '<select class="uk-select uk-width-1-1" name="run[difficulty_id]">';
+    $difficulty_dropdown = '<select id="dif_dropdown" class="uk-select uk-width-1-1" name="run[difficulty_id]">';
     foreach ($difficulties as $difficulty) {
         $difficulty_dropdown .= '<option value="' . $difficulty['id_difficulty'] . '" ' . ($difficulty['dif_name'] == default_difficulty ? 'selected' : '') . '>' . $difficulty['dif_name'] . '</option>';
     }
@@ -135,8 +135,8 @@ if (isset($task) && $task == "add") {
     $mods_checkboxes = '<div class="uk-grid uk-grid-medium uk-grid-width-1-1" data-uk-grid-margin>';
     foreach ($mods as $mod) {
         $mods_checkboxes .= '<div class="uk-width-1-3">';
-        $mods_checkboxes .= '<input id="id_mod_' . $mod['id_mod'] . '" type="checkbox" name="mod[' . $mod['id_mod'] . ']" value="' . $mod['mod_extra_grimoire_dice'] . '">';
-        $mods_checkboxes .= '<label for="id_mod_' . $mod['id_mod'] . '"> ' . $mod['mod_description'] . '</label>';
+        $mods_checkboxes .= '<input id="mod_' . $mod['mod_name'] . '" type="checkbox" name="mod[' . $mod['id_mod'] . ']" value="' . $mod['mod_extra_grimoire_dice'] . '">';
+        $mods_checkboxes .= '<label for="mod_' . $mod['mod_name'] . '"> ' . $mod['mod_description'] . '</label>';
         $mods_checkboxes .= '</div>';
     }
     $mods_checkboxes .= '</div>';
