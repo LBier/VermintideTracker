@@ -21,3 +21,12 @@ function select($query) {
 
     return $select->fetchAll(PDO::FETCH_ASSOC);
 }
+
+function get_parameter($query, $parameter) {
+    $result = select($query);
+
+    if (!empty($result)) {
+        return $result[0][$parameter];
+    }
+    return null;
+}

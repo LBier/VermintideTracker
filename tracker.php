@@ -8,16 +8,70 @@ $result_text = "";
 if (!empty($task)) {
 	switch ($task) {
 		case "add":
-			if (!empty($_POST['run']) && $_POST['submit'] == 'Add') {
+			if (!empty($_POST['submit']) && $_POST['submit'] == 'Add') {
+			    // get parameter
+                $cata_prob_red_on_6 = (int)get_parameter("SELECT par_value FROM tbl_parameter WHERE par_name = 'cata_prob_red_on_6'", "par_value");
+                $pro_extra_grimoire_dice = 0;
+                if (!empty($_POST['mod'])) {
+                    foreach ($_POST['mod'] as $id_mod => $mod_extra_grimoire_dice) {
+                        $pro_extra_grimoire_dice += (int)$mod_extra_grimoire_dice;
+                    }
+                }
+
+			    // get probability
+                $pro_grimoire_dice = (int)$_POST['pro']['grimoire_dice'] + $pro_extra_grimoire_dice;
+                $dice_sum = $pro_grimoire_dice;
+
+                $pro_tome_dice = 0;
+                for ($i = 0; $i < (int)$_POST['pro']['tome_dice']; $i++) {
+                    if ($dice_sum < 7) {
+                        $pro_tome_dice += 1;
+                        $dice_sum += 1;
+                    }
+                }
+
+                $pro_extra_dice = 0;
+                for ($i = 0; $i < (int)$_POST['pro']['extra_dice']; $i++) {
+                    if ($dice_sum < 7) {
+                        $pro_extra_dice += 1;
+                        $dice_sum += 1;
+                    }
+                }
+
+                $pro_normal_dice = 7 - ($pro_grimoire_dice + $pro_tome_dice + $pro_extra_dice);
+//                echo $pro_grimoire_dice . "g" . $pro_tome_dice . "t" . $pro_extra_dice . "e" . $pro_normal_dice . "n";
+
+                $query = "SELECT * FROM tbl_probability WHERE pro_grimoire_dice = :pro_grimoire_dice AND pro_tome_dice = :pro_tome_dice AND pro_extra_dice = :pro_extra_dice AND pro_normal_dice = :pro_normal_dice";
+                $select = $pdo->prepare($query);
+                $select->execute(array("pro_grimoire_dice" => $pro_grimoire_dice, "pro_tome_dice" => $pro_tome_dice, "pro_extra_dice" => $pro_extra_dice, "pro_normal_dice" => $pro_normal_dice));
+                $probability = $select->fetchObject();
+//                dump($probability);
 
 			    // save run
-
+                $inputs = array();
+                $inputs['run_map_id'] = (int)$_POST['run']['map_id'];
+                $inputs['run_difficulty_id'] = (int)$_POST['run']['difficulty_id'];
+                $inputs['run_probability_id'] = (int)$probability->id_probability;
+                $inputs['run_duration'] = (int)$_POST['run']['duration'];
+                switch ($inputs['run_difficulty_id']) {
+                    case 5:
+                        $inputs['run_probability_red'] = round((float)$probability->pro_probability_seven + ((float)$probability->pro_probability_six * $cata_prob_red_on_6 / 100), 2);
+                        break;
+                    case 4:
+                        $inputs['run_probability_red'] = round((float)$probability->pro_probability_seven, 2);
+                        break;
+                    default:
+                        $inputs['run_probability_red'] = 0;
+                }
+                $inputs['run_xRed'] = isset($_POST['run']['xRed']) ? 1 : 0;
+                $inputs['run_notes'] = empty($_POST['run']['notes']) ? null : $_POST['run']['notes'];
+                dump($inputs);
 			}
 			break;
 		case "delete":
 			if ($isset_id) {
-				$delete = $pdo->prepare("DELETE FROM tbl_run WHERE id_run = ?");
-				$result = $delete->execute(array($id_run));
+				$delete = $pdo->prepare("DELETE FROM tbl_run WHERE id_run = :id_run");
+				$result = $delete->execute(array("id_run" => $id_run));
 				
 				if ($result === true) {
 					$result_text .= "Run has been deleted.";
@@ -63,7 +117,8 @@ if (isset($task) && $task == "add") {
     $mods_checkboxes = '<div class="uk-grid uk-grid-medium uk-grid-width-1-1" data-uk-grid-margin>';
     foreach ($mods as $mod) {
         $mods_checkboxes .= '<div class="uk-width-1-3">';
-        $mods_checkboxes .= '<input id="id_mod_' . $mod['id_mod'] . '" type="checkbox"><label for="id_mod_' . $mod['id_mod'] . '"> ' . $mod['mod_description'] . '</label>';
+        $mods_checkboxes .= '<input id="id_mod_' . $mod['id_mod'] . '" type="checkbox" name="mod[' . $mod['id_mod'] . ']" value="' . $mod['mod_extra_grimoire_dice'] . '">';
+        $mods_checkboxes .= '<label for="id_mod_' . $mod['id_mod'] . '"> ' . $mod['mod_description'] . '</label>';
         $mods_checkboxes .= '</div>';
     }
     $mods_checkboxes .= '</div>';
@@ -74,7 +129,7 @@ if (isset($task) && $task == "add") {
 				<h3 class="uk-card-title">Add a run</h3>
 			</div>
 			<div class="uk-card-body">
-				<form class="uk-form uk-form-stacked" action="index.php?seite=navigation" method="post">
+				<form class="uk-form uk-form-stacked" action="index.php" method="post">
                     <div class="uk-grid uk-grid-medium" data-uk-grid-margin>
                         <div class="uk-width-1-2">
                             <label>DLC</label>
@@ -82,7 +137,8 @@ if (isset($task) && $task == "add") {
                         </div>
                         <div class="uk-width-1-2">
                             <label>Map</label>
-                            <select id="map_dropdown" class="uk-select uk-width-1-1" name="run[map_id]"></select>
+                            <select id="map_dropdown" class="uk-select uk-width-1-1" name="run[map_id]">
+                            </select>
                         </div>
                         <div class="uk-width-1-3">
                             <label>Difficulty</label>
@@ -191,7 +247,7 @@ if (isset($task) && $task == "add") {
 							<th>Difficulty</th>
 							<th>Mods</th>
 							<th>Map</th>
-							<th>Length</th>
+							<th>Duration</th>
 							<th>Dice</th>
 							<th>red %</th>
 							<th>Date</th>
@@ -205,7 +261,7 @@ if (isset($task) && $task == "add") {
 									<td>' . $run['dif_name'] . '</td>
 									<td>' . $run['rendered_mods'] . '</td>
 									<td>' . $run['map_name'] . '</td>
-									<td>' . $run['run_length'] . ' min</td>
+									<td>' . $run['run_duration'] . ' min</td>
 									<td>' . $run['pro_dice_string'] . '</td>
 									<td>' . $run['run_probability_red'] . '</td>
 									<td>' . date("d.m.Y H:i", strtotime($run['run_createDtTi'])) . '</td>
