@@ -31,12 +31,18 @@ $result_text = get_request("result_text", "");
         <script>
             $( document ).ready(function() {
 
-                var first_dlc = $('#dlc_dropdown').find("option:first-child").val();
+                var dlc_dropdown = $('#dlc_dropdown');
+                var first_dlc = dlc_dropdown.find("option:first-child").val();
                 get_map_options(first_dlc);
 
-                $('#dlc_dropdown').on("change", function(e) {
+                dlc_dropdown.on("change", function(e) {
                     var dlc = $(this).val();
                     get_map_options(dlc);
+                });
+
+                check_deathwish();
+                $('#dif_dropdown').on("change", function(e) {
+                    check_deathwish();
                 });
 
             });
@@ -50,6 +56,15 @@ $result_text = get_request("result_text", "");
                         $('#map_dropdown').html(data);
                     }
                 });
+            }
+
+            function check_deathwish() {
+                var difficulty = $('#dif_dropdown :selected').text();
+                if (difficulty === 'Cataclysm') {
+                    $('#mod_deathwish').removeAttr('disabled');
+                } else {
+                    $('#mod_deathwish').attr('disabled', 'disabled');
+                }
             }
         </script>
 	</body>

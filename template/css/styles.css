@@ -56,6 +56,9 @@ a, a:hover {
     background-color: #ccc;
     transition: all 0.3s ease-in-out 0s;
 }
+.uk-button-secondary {
+    background-color: #dddddd;
+}
 .uk-card-primary {
     background-color: #be160b;
 }
