@@ -21,7 +21,6 @@ if (!empty($task)) {
 			    // get probability
                 $pro_grimoire_dice = (int)$_POST['pro']['grimoire_dice'] + $pro_extra_grimoire_dice;
                 $dice_sum = $pro_grimoire_dice;
-
                 $pro_tome_dice = 0;
                 for ($i = 0; $i < (int)$_POST['pro']['tome_dice']; $i++) {
                     if ($dice_sum < 7) {
@@ -29,7 +28,6 @@ if (!empty($task)) {
                         $dice_sum += 1;
                     }
                 }
-
                 $pro_extra_dice = 0;
                 for ($i = 0; $i < (int)$_POST['pro']['extra_dice']; $i++) {
                     if ($dice_sum < 7) {
@@ -37,7 +35,6 @@ if (!empty($task)) {
                         $dice_sum += 1;
                     }
                 }
-
                 $pro_normal_dice = 7 - ($pro_grimoire_dice + $pro_tome_dice + $pro_extra_dice);
 //                echo $pro_grimoire_dice . "g" . $pro_tome_dice . "t" . $pro_extra_dice . "e" . $pro_normal_dice . "n";
 
@@ -45,32 +42,41 @@ if (!empty($task)) {
                 $select = $pdo->prepare($query);
                 $select->execute(array("pro_grimoire_dice" => $pro_grimoire_dice, "pro_tome_dice" => $pro_tome_dice, "pro_extra_dice" => $pro_extra_dice, "pro_normal_dice" => $pro_normal_dice));
                 $probability = $select->fetchObject();
-//                dump($probability);
 
-			    // save run
-                $inputs = array();
-                $inputs['run_map_id'] = (int)$_POST['run']['map_id'];
-                $inputs['run_difficulty_id'] = (int)$_POST['run']['difficulty_id'];
-                $inputs['run_probability_id'] = (int)$probability->id_probability;
-                $inputs['run_duration'] = (int)$_POST['run']['duration'];
-                switch ($inputs['run_difficulty_id']) {
-                    case 5:
-                        $inputs['run_probability_red'] = round((float)$probability->pro_probability_seven + ((float)$probability->pro_probability_six * $cata_prob_red_on_6 / 100), 2);
-                        break;
-                    case 4:
-                        $inputs['run_probability_red'] = round((float)$probability->pro_probability_seven, 2);
-                        break;
-                    default:
-                        $inputs['run_probability_red'] = 0;
+                if ($probability !== false) {
+                    // prepare inputs
+                    $inputs = array();
+                    $inputs['run_map_id'] = (int)$_POST['run']['map_id'];
+                    $inputs['run_difficulty_id'] = (int)$_POST['run']['difficulty_id'];
+                    $inputs['run_probability_id'] = (int)$probability->id_probability;
+                    $inputs['run_duration'] = (int)$_POST['run']['duration'];
+                    switch ($inputs['run_difficulty_id']) {
+                        case 5:
+                            $inputs['run_probability_red'] = round((float)$probability->pro_probability_seven + ((float)$probability->pro_probability_six * $cata_prob_red_on_6 / 100), 2);
+                            break;
+                        case 4:
+                            $inputs['run_probability_red'] = round((float)$probability->pro_probability_seven, 2);
+                            break;
+                        default:
+                            $inputs['run_probability_red'] = 0;
+                    }
+                    $inputs['run_xRed'] = isset($_POST['run']['xRed']) ? 1 : 0;
+                    $inputs['run_notes'] = empty($_POST['run']['notes']) ? null : $_POST['run']['notes'];
+
+                    // save run
+                    $query = "INSERT INTO tbl_run (run_map_id, run_difficulty_id, run_probability_id, run_duration, run_probability_red, run_xRed, run_notes) ";
+                    $query .= "VALUES (:run_map_id, :run_difficulty_id, :run_probability_id, :run_duration, :run_probability_red, :run_xRed, :run_notes)";
+                    $insert = $pdo->prepare($query);
+                    $result = $insert->execute($inputs);
+
+                    if ($result === true) {
+                        $result_text .= "Run has been saved";
+                    } else {
+                        $result_text .= "Error saving run";
+                    }
+                } else {
+                    $result_text .= "Flawed Inputs!";
                 }
-                $inputs['run_xRed'] = isset($_POST['run']['xRed']) ? 1 : 0;
-                $inputs['run_notes'] = empty($_POST['run']['notes']) ? null : $_POST['run']['notes'];
-//                dump($inputs);
-
-                $query = "INSERT INTO tbl_run (run_map_id, run_difficulty_id, run_probability_id, run_duration, run_probability_red, run_xRed, run_notes) ";
-                $query .= "VALUES (:run_map_id, :run_difficulty_id, :run_probability_id, :run_duration, :run_probability_red, :run_xRed, :run_notes)";
-                $insert = $pdo->prepare($query);
-                $result = $insert->execute($inputs);
 			}
 			break;
 		case "delete":
