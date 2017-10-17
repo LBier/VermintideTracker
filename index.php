@@ -5,6 +5,7 @@ require 'incl_functions.php';
 
 // $page = get_request("page");
 $task = get_request("task");
+$result_text = get_request("result_text", "");
 
 ?>
 
