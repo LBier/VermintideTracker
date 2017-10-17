@@ -66,6 +66,11 @@ if (!empty($task)) {
                 $inputs['run_xRed'] = isset($_POST['run']['xRed']) ? 1 : 0;
                 $inputs['run_notes'] = empty($_POST['run']['notes']) ? null : $_POST['run']['notes'];
                 dump($inputs);
+
+                $query = "INSERT INTO tbl_run (run_map_id, run_difficulty_id, run_probability_id, run_duration, run_probability_red, run_xRed, run_notes) ";
+                $query .= "VALUES (:run_map_id, :run_difficulty_id, :run_probability_id, :run_duration, :run_probability_red, :run_xRed, :run_notes)";
+                $insert = $pdo->prepare($query);
+                $result = $insert->execute($inputs);
 			}
 			break;
 		case "delete":
@@ -209,7 +214,7 @@ if (isset($task) && $task == "add") {
 			$select = $pdo->prepare($query);
 			$select->execute(array($run['id_run']));
 			$run['mods'] = $select->fetchAll(PDO::FETCH_ASSOC);
-			
+
 			$run['rendered_mods'] = '';
 			if (!empty($run['mods'])) {
 				foreach ($run['mods'] as $mod) {
