@@ -6,11 +6,11 @@ function dump($var) {
 	echo '</pre>';
 }
 
-function get_request($key) {
+function get_request($key, $default = null) {
 	if (isset($_REQUEST[$key])) {
 		return $_REQUEST[$key];
 	}
-	return null;
+	return $default;
 }
 
 function select($query) {

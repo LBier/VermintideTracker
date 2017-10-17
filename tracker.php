@@ -3,8 +3,6 @@
 $id_run = get_request("id_run");
 $isset_id = isset($id_run);
 
-$result_text = "";
-
 if (!empty($task)) {
 	switch ($task) {
 		case "add":
@@ -70,7 +68,16 @@ if (!empty($task)) {
                     $result = $insert->execute($inputs);
 
                     if ($result === true) {
+                        $id_run = $pdo->lastInsertId();
+                        if (!empty($_POST['mod'])) {
+                            foreach ($_POST['mod'] as $id_mod => $mod_extra_grimoire_dice) {
+                                $insert = $pdo->prepare("INSERT INTO tbl_run_mod (rm_run_id, rm_mod_id) VALUES (:rm_run_id, :rm_mod_id)");
+                                $insert->execute(array("rm_run_id" => $id_run, "rm_mod_id" => $id_mod));
+                            }
+                        }
+
                         $result_text .= "Run has been saved";
+                        header("Location: index.php?result_text=" . $result_text);
                     } else {
                         $result_text .= "Error saving run";
                     }
@@ -209,7 +216,7 @@ if (isset($task) && $task == "add") {
 } else {
 	
 	// run list
-	$query = "SELECT * FROM vw_run";
+	$query = "SELECT * FROM vw_run ORDER BY run_createDtTi DESC";
 	$select = $pdo->prepare($query);
 	$select->execute();
 	$runs = $select->fetchAll(PDO::FETCH_ASSOC);
@@ -274,18 +281,14 @@ if (isset($task) && $task == "add") {
 									<td>' . $run['map_name'] . '</td>
 									<td>' . $run['run_duration'] . ' min</td>
 									<td>' . $run['pro_dice_string'] . '</td>
-									<td>' . $run['run_probability_red'] . '</td>
+									<td>' . $run['run_probability_red'] . '%</td>
 									<td>' . date("d.m.Y H:i", strtotime($run['run_createDtTi'])) . '</td>
 									<td>
-										<ul class="uk-iconnav uk-flex-center">
-											<li>
-												<form action="index.php" method="post">
-													<input type="hidden" name="task" value="delete">
-													<input type="hidden" name="id_run" value="' . $run['id_run'] . '">
-													<button type="submit" title="Delete" onClick="return confirm(\'Delete run?\')" uk-icon="icon:trash"></button>
-												</form>
-											</li>
-										</ul>
+										<form action="index.php" method="post">
+                                            <input type="hidden" name="task" value="delete">
+                                            <input type="hidden" name="id_run" value="' . $run['id_run'] . '">
+                                            <button type="submit" title="Delete" onClick="return confirm(\'Delete run?\')"><i class="uk-icon-trash"></i></button>
+                                        </form>
 									</td>
 								</tr>';
 							}
