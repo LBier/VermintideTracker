@@ -1,5 +1,6 @@
 <?php
 
+$task = get_request("task");
 $id_run = get_request("id_run");
 $isset_id = isset($id_run);
 
@@ -173,19 +174,12 @@ if (isset($task) && $task == "add") {
                     </div>
                     <div class="uk-width-1-3">
                         <label>Grimoires</label>
-                        <select class="uk-select uk-width-1-1" name="pro[grimoire_dice]">
-                            <option>0</option>
-                            <option>1</option>
-                            <option>2</option>
+                        <select id="grimoires_dropdown" class="uk-select uk-width-1-1" name="pro[grimoire_dice]">
                         </select>
                     </div>
                     <div class="uk-width-1-3">
                         <label>Tomes</label>
-                        <select class="uk-select uk-width-1-1" name="pro[tome_dice]">
-                            <option>0</option>
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
+                        <select id="tomes_dropdown" class="uk-select uk-width-1-1" name="pro[tome_dice]">
                         </select>
                     </div>
                     <div class="uk-width-1-3">
