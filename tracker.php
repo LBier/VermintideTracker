@@ -51,6 +51,7 @@ if (!empty($task)) {
                     $inputs['run_map_id'] = (int)$_POST['run']['map_id'];
                     $inputs['run_difficulty_id'] = (int)$_POST['run']['difficulty_id'];
                     $inputs['run_probability_id'] = (int)$probability->id_probability;
+                    $inputs['run_rarity_id'] = (int)$_POST['run']['rarity_id'];
                     $inputs['run_duration'] = (int)$_POST['run']['duration'];
                     switch ($inputs['run_difficulty_id']) {
                         case 5:
@@ -62,12 +63,11 @@ if (!empty($task)) {
                         default:
                             $inputs['run_probability_red'] = 0;
                     }
-                    $inputs['run_xRed'] = isset($_POST['run']['xRed']) ? 1 : 0;
                     $inputs['run_notes'] = empty($_POST['run']['notes']) ? null : $_POST['run']['notes'];
 
                     // save run
-                    $query = "INSERT INTO tbl_run (run_map_id, run_difficulty_id, run_probability_id, run_duration, run_probability_red, run_xRed, run_notes) ";
-                    $query .= "VALUES (:run_map_id, :run_difficulty_id, :run_probability_id, :run_duration, :run_probability_red, :run_xRed, :run_notes)";
+                    $query = "INSERT INTO tbl_run (run_map_id, run_difficulty_id, run_probability_id, run_rarity_id, run_duration, run_probability_red, run_notes) ";
+                    $query .= "VALUES (:run_map_id, :run_difficulty_id, :run_probability_id, :run_rarity_id, :run_duration, :run_probability_red, :run_notes)";
                     $insert = $pdo->prepare($query);
                     $result = $insert->execute($inputs);
 
@@ -134,6 +134,13 @@ if (isset($task) && $task == "add") {
     }
     $difficulty_dropdown .= '</select>';
 
+    $rarities = select("SELECT * FROM tbl_rarity");
+    $rarity_dropdown = '<select class="uk-select uk-width-1-1" name="run[rarity_id]">';
+    foreach ($rarities as $rarity) {
+        $rarity_dropdown .= '<option value="' . $rarity['id_rarity'] . '" ' . ($rarity['rar_name'] == DEFAULT_RARITY ? 'selected' : '') . '>' . $rarity['rar_color'] . '</option>';
+    }
+    $rarity_dropdown .= '</select>';
+
     $mods = select("SELECT * FROM tbl_mod");
     $mods_checkboxes = '<div class="uk-grid uk-grid-medium uk-grid-width-1-1" data-uk-grid-margin>';
     foreach ($mods as $mod) {
@@ -165,12 +172,12 @@ if (isset($task) && $task == "add") {
                         ' . $difficulty_dropdown . '
                     </div>
                     <div class="uk-width-1-3">
-                        <label>Duration (min)</label>
-                        <input class="uk-input uk-width-1-1" type="number" name="run[duration]">
+                        <label>Item Rarity</label>
+                        ' . $rarity_dropdown . '
                     </div>
                     <div class="uk-width-1-3">
-                        <input id="xRed" type="checkbox" name="run[xRed]">
-                        <label for="xRed">Got Red Item</label>
+                        <label>Duration (min)</label>
+                        <input class="uk-input uk-width-1-1" type="number" name="run[duration]">
                     </div>
                     <div class="uk-width-1-3">
                         <label>Grimoires</label>
@@ -263,7 +270,7 @@ if (isset($task) && $task == "add") {
                         <th>' . get_sort_buttons("run_duration") . '</th>
                         <th>' . get_sort_buttons("pro_dice_string") . '</th>
                         <th>' . get_sort_buttons("run_probability_red") . '</th>
-                        <th>' . get_sort_buttons("run_xRed") . '</th>
+                        <th>' . get_sort_buttons("rar_level") . '</th>
                         <th></th>
                         <th>' . get_sort_buttons("run_createDtTi") . '</th>
                         <th></th>
@@ -275,7 +282,7 @@ if (isset($task) && $task == "add") {
                         <th>Duration</th>
                         <th>Dice</th>
                         <th>red %</th>
-                        <th>got a red</th>
+                        <th>Item Rarity</th>
                         <th>Notes</th>
                         <th>Date</th>
                         <th></th>
@@ -291,7 +298,7 @@ if (isset($task) && $task == "add") {
                                 <td>' . $run['run_duration'] . ' min</td>
                                 <td>' . $run['pro_dice_string'] . '</td>
                                 <td>' . $run['run_probability_red'] . '%</td>
-                                <td>' . ($run['run_xRed'] == 1 ? 'Yes' : 'No') . '</td>
+                                <td>' . $run['rar_color'] . '</td>
                                 <td>' . $run['run_notes'] . '</td>
                                 <td>' . date("d.m.Y H:i", strtotime($run['run_createDtTi'])) . '</td>
                                 <td>

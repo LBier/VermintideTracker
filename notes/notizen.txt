@@ -16,6 +16,9 @@ AND map.map_dlc_id = dlc.id_dlc
 AND run.run_difficulty_id = dif.id_difficulty
 AND run.run_probability_id = pro.id_probability
 
+// View as it is in MySQL
+select `run`.`id_run` AS `id_run`,`dif`.`dif_name` AS `dif_name`,`dif`.`dif_level` AS `dif_level`,`map`.`map_name` AS `map_name`,`dlc`.`dlc_name` AS `dlc_name`,`run`.`run_duration` AS `run_duration`,`pro`.`pro_dice_string` AS `pro_dice_string`,rar_color,rar_level,`run`.`run_probability_red` AS `run_probability_red`,`run`.`run_notes` AS `run_notes`,`run`.`run_createDtTi` AS `run_createDtTi` from (((((`vermintide`.`tbl_run` `run` join `vermintide`.`tbl_map` `map`) join `vermintide`.`tbl_dlc` `dlc`) join `vermintide`.`tbl_difficulty` `dif`) join `vermintide`.`tbl_probability` `pro`) join `vermintide`.`tbl_rarity` `rar`) where ((`run`.`run_map_id` = `map`.`id_map`) and (`map`.`map_dlc_id` = `dlc`.`id_dlc`) and (`run`.`run_difficulty_id` = `dif`.`id_difficulty`) and (`run`.`run_probability_id` = `pro`.`id_probability`) and (`run`.`run_rarity_id` = `rar`.`id_rarity`))
+
 SELECT CONCAT(`pro_grimoire_dice`, 'g', `pro_tome_dice`, 't', `pro_extra_dice`, 'e', `pro_normal_dice`, 'n') FROM tbl_probability
 UPDATE tbl_probability SET pro_dice_string = CONCAT(`pro_grimoire_dice`, 'g', `pro_tome_dice`, 't', `pro_extra_dice`, 'e', `pro_normal_dice`, 'n')
 
