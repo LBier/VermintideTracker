@@ -3,6 +3,9 @@
 $id_run = get_request("id_run");
 $isset_id = isset($id_run);
 
+$sort = get_request("sort", DEFAULT_SORT);
+$order = get_request("order", DEFAULT_ORDER);
+
 if (!empty($task)) {
 	switch ($task) {
 		case "add":
@@ -126,7 +129,7 @@ if (isset($task) && $task == "add") {
     $difficulties = select("SELECT * FROM tbl_difficulty");
     $difficulty_dropdown = '<select id="dif_dropdown" class="uk-select uk-width-1-1" name="run[difficulty_id]">';
     foreach ($difficulties as $difficulty) {
-        $difficulty_dropdown .= '<option value="' . $difficulty['id_difficulty'] . '" ' . ($difficulty['dif_name'] == default_difficulty ? 'selected' : '') . '>' . $difficulty['dif_name'] . '</option>';
+        $difficulty_dropdown .= '<option value="' . $difficulty['id_difficulty'] . '" ' . ($difficulty['dif_name'] == DEFAULT_DIFFICULTY ? 'selected' : '') . '>' . $difficulty['dif_name'] . '</option>';
     }
     $difficulty_dropdown .= '</select>';
 
@@ -213,7 +216,7 @@ if (isset($task) && $task == "add") {
 } else {
 	
 	// run list
-	$query = "SELECT * FROM vw_run ORDER BY run_createDtTi DESC";
+	$query = "SELECT * FROM vw_run ORDER BY " . $sort . " " . $order;
 	$select = $pdo->prepare($query);
 	$select->execute();
 	$runs = $select->fetchAll(PDO::FETCH_ASSOC);
@@ -259,6 +262,18 @@ if (isset($task) && $task == "add") {
                     <col width="5%">
                 </colgroup>
                 <thead>
+                    <tr>
+                        <th>' . get_sort_buttons("dif_level") . '</th>
+                        <th></th>
+                        <th>' . get_sort_buttons("map_name") . '</th>
+                        <th>' . get_sort_buttons("run_duration") . '</th>
+                        <th>' . get_sort_buttons("pro_dice_string") . '</th>
+                        <th>' . get_sort_buttons("run_probability_red") . '</th>
+                        <th>' . get_sort_buttons("run_xRed") . '</th>
+                        <th></th>
+                        <th>' . get_sort_buttons("run_createDtTi") . '</th>
+                        <th></th>
+                    </tr>
                     <tr>
                         <th>Difficulty</th>
                         <th>Mods</th>
