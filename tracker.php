@@ -1,7 +1,11 @@
-<?
+<?php
 
+$task = get_request("task");
 $id_run = get_request("id_run");
 $isset_id = isset($id_run);
+
+$sort = get_request("sort", DEFAULT_SORT);
+$order = get_request("order", DEFAULT_ORDER);
 
 if (!empty($task)) {
 	switch ($task) {
@@ -126,7 +130,7 @@ if (isset($task) && $task == "add") {
     $difficulties = select("SELECT * FROM tbl_difficulty");
     $difficulty_dropdown = '<select id="dif_dropdown" class="uk-select uk-width-1-1" name="run[difficulty_id]">';
     foreach ($difficulties as $difficulty) {
-        $difficulty_dropdown .= '<option value="' . $difficulty['id_difficulty'] . '" ' . ($difficulty['dif_name'] == default_difficulty ? 'selected' : '') . '>' . $difficulty['dif_name'] . '</option>';
+        $difficulty_dropdown .= '<option value="' . $difficulty['id_difficulty'] . '" ' . ($difficulty['dif_name'] == DEFAULT_DIFFICULTY ? 'selected' : '') . '>' . $difficulty['dif_name'] . '</option>';
     }
     $difficulty_dropdown .= '</select>';
 
@@ -170,19 +174,12 @@ if (isset($task) && $task == "add") {
                     </div>
                     <div class="uk-width-1-3">
                         <label>Grimoires</label>
-                        <select class="uk-select uk-width-1-1" name="pro[grimoire_dice]">
-                            <option>0</option>
-                            <option>1</option>
-                            <option>2</option>
+                        <select id="grimoires_dropdown" class="uk-select uk-width-1-1" name="pro[grimoire_dice]">
                         </select>
                     </div>
                     <div class="uk-width-1-3">
                         <label>Tomes</label>
-                        <select class="uk-select uk-width-1-1" name="pro[tome_dice]">
-                            <option>0</option>
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
+                        <select id="tomes_dropdown" class="uk-select uk-width-1-1" name="pro[tome_dice]">
                         </select>
                     </div>
                     <div class="uk-width-1-3">
@@ -213,7 +210,7 @@ if (isset($task) && $task == "add") {
 } else {
 	
 	// run list
-	$query = "SELECT * FROM vw_run ORDER BY run_createDtTi DESC";
+	$query = "SELECT * FROM vw_run ORDER BY " . $sort . " " . $order;
 	$select = $pdo->prepare($query);
 	$select->execute();
 	$runs = $select->fetchAll(PDO::FETCH_ASSOC);
@@ -259,6 +256,18 @@ if (isset($task) && $task == "add") {
                     <col width="5%">
                 </colgroup>
                 <thead>
+                    <tr>
+                        <th>' . get_sort_buttons("dif_level") . '</th>
+                        <th></th>
+                        <th>' . get_sort_buttons("map_name") . '</th>
+                        <th>' . get_sort_buttons("run_duration") . '</th>
+                        <th>' . get_sort_buttons("pro_dice_string") . '</th>
+                        <th>' . get_sort_buttons("run_probability_red") . '</th>
+                        <th>' . get_sort_buttons("run_xRed") . '</th>
+                        <th></th>
+                        <th>' . get_sort_buttons("run_createDtTi") . '</th>
+                        <th></th>
+                    </tr>
                     <tr>
                         <th>Difficulty</th>
                         <th>Mods</th>

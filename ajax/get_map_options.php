@@ -1,6 +1,6 @@
-<?
+<?php
 
-require 'incl_config.php';
+require '../incl_config.php';
 
 $return = '';
 
