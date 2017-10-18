@@ -1,4 +1,4 @@
-<?
+<?php
 
 $id_run = get_request("id_run");
 $isset_id = isset($id_run);

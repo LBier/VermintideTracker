@@ -270,7 +270,7 @@ CREATE TABLE `tbl_run` (
 --
 
 INSERT INTO `tbl_run` (`id_run`, `run_map_id`, `run_difficulty_id`, `run_probability_id`, `run_duration`, `run_probability_red`, `run_xRed`, `run_notes`, `run_createDtTi`) VALUES
-(1, 14, 5, 35, 26, 10.49, 0, 'Lorem Ipsum dolor sit amet. Consicetur what the fuck am I writing, i hope this is enough.', '2017-10-17 12:58:49'),
+(1, 14, 5, 35, 26, 10.49, 0, 'Lorem Ipsum.', '2017-10-17 12:58:49'),
 (2, 17, 4, 34, 18, 3.29, 0, NULL, '2017-10-17 13:27:54'),
 (3, 1, 3, 13, 27, 0.00, 0, NULL, '2017-10-17 13:28:32'),
 (4, 2, 5, 56, 26, 40.74, 1, NULL, '2017-10-17 13:44:36'),

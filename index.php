@@ -1,4 +1,4 @@
-<?
+<?php
 
 require 'incl_config.php';
 require 'incl_functions.php';
@@ -23,7 +23,7 @@ $result_text = get_request("result_text", "");
 	<body>
 		<div id="content">
 			<div class="uk-grid uk-animation-fade">
-				<?
+				<?php
 				include "tracker.php";
 				?>
 			</div>
