@@ -23,3 +23,19 @@ SELECT CONCAT(`pro_grimoire_dice`, 'g', `pro_tome_dice`, 't', `pro_extra_dice`, 
 UPDATE tbl_probability SET pro_dice_string = CONCAT(`pro_grimoire_dice`, 'g', `pro_tome_dice`, 't', `pro_extra_dice`, 'e', `pro_normal_dice`, 'n')
 
 SELECT * FROM tbl_map as map, tbl_dlc as dlc WHERE dlc.id_dlc = map.map_dlc_id
+
+
+// Statistik-Queries
+
+// runs, sums and averages
+SELECT count(id_run), sum(run_duration), avg(run_duration), sum(run_probability_red), avg(run_probability_red) FROM `vw_run`
+// group by map
+SELECT id_map, map_name, count(id_run) as count FROM `vw_run` GROUP BY map_name ORDER BY count DESC, id_map ASC
+// group by difficulty
+SELECT dif_name, count(id_run) as count FROM `vw_run` GROUP BY dif_name ORDER BY count DESC, dif_level DESC
+// group by item rarity
+SELECT rar_color, count(id_run) as count FROM `vw_run` GROUP BY rar_color ORDER BY count DESC, rar_level DESC
+// group by date
+SELECT DATE(`run_createDtTi`) as run_date, count(id_run) as count FROM `vw_run` GROUP BY run_date ORDER by run_date DESC
+SELECT SUBSTRING(`run_createDtTi`, 1, 10) as run_date, count(id_run) as count FROM `vw_run` GROUP BY run_date ORDER by run_date DESC
+SELECT SUBSTRING(`run_createDtTi`, 1, 7) as run_date, count(id_run) as count FROM `vw_run` GROUP BY run_date ORDER by run_date DESC

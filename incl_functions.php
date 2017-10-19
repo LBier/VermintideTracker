@@ -43,3 +43,26 @@ function get_sort_buttons($new_sort) {
 
     return $content;
 }
+
+function render_table($head, $rows) {
+    $table = '<table class="uk-table uk-table-striped">
+        <thead>
+            <tr>';
+            foreach ($head as $value) {
+                $table .= '<th>' . $value . '</th>';
+            }
+            $table .= '</tr>
+        </thead>
+        <tbody>';
+        foreach ($rows as $row) {
+            $table .= '<tr>';
+            foreach ($row as $value) {
+                $table .= '<td>' . $value . '</td>';
+            }
+            $table .= '</tr>';
+        }
+        $table .= '</tbody>
+    </table>';
+
+    return $table;
+}

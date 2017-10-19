@@ -3,7 +3,7 @@
 require 'incl_config.php';
 require 'incl_functions.php';
 
-// $page = get_request("page");
+$page = get_request("page", "tracker");
 $result_text = get_request("result_text", "");
 
 ?>
@@ -23,9 +23,15 @@ $result_text = get_request("result_text", "");
 	<body>
 		<div id="content">
 			<div class="uk-grid uk-animation-fade">
-				<?php
-				include "tracker.php";
-				?>
+                <?php
+                    switch ($page) {
+                        case "statistics":
+                            include 'statistics.php';
+                            break;
+                        default:
+                            include 'tracker.php';
+                    }
+                ?>
 			</div>
 		</div>
         <script>

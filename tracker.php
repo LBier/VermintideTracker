@@ -107,7 +107,7 @@ if (!empty($task)) {
 
 // Feld mit dem result text erstellen (oder auch nicht)
 if (!empty($result_text)) {
-	$content = '<div class="uk-width-1-1">
+	$content = '<div class="uk-width-1-1 uk-margin-bottom">
 		<div class="uk-alert" data-uk-alert>
 			<a href="" class="uk-alert-close uk-close"></a>
             <p>' . $result_text . '</p>
@@ -311,7 +311,7 @@ if (isset($task) && $task == "add") {
                             </tr>';
                         }
                     } else {
-                        $content .= '<tr><td colspan="8">No runs available</td></tr>';
+                        $content .= '<tr><td colspan="10">No runs available</td></tr>';
                     }
                 $content .= '</tbody>
             </table>
