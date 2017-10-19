@@ -3,7 +3,7 @@
 require 'incl_config.php';
 require 'incl_functions.php';
 
-// $page = get_request("page");
+$page = get_request("page", "tracker");
 $result_text = get_request("result_text", "");
 
 ?>
@@ -23,9 +23,15 @@ $result_text = get_request("result_text", "");
 	<body>
 		<div id="content">
 			<div class="uk-grid uk-animation-fade">
-				<?php
-				include "tracker.php";
-				?>
+                <?php
+                    switch ($page) {
+                        case "statistics":
+                            include 'statistics.php';
+                            break;
+                        default:
+                            include 'tracker.php';
+                    }
+                ?>
 			</div>
 		</div>
         <script>
@@ -34,18 +40,21 @@ $result_text = get_request("result_text", "");
                 var dlc_dropdown = $('#dlc_dropdown');
                 var first_dlc = dlc_dropdown.find("option:first-child").val();
 
+                // the map dropdown gets filled based on the selected DLC
                 get_map_options(first_dlc);
                 dlc_dropdown.on("change", function(e) {
                     var dlc = $(this).val();
                     get_map_options(dlc);
                 });
 
+                // the grim and tome dropdowns get filled based on the selected map
                 $('#map_dropdown').on("change", function(e) {
                     var map = $(this).val();
                     get_book_options(map, "grimoires");
                     get_book_options(map, "tomes");
                 });
 
+                // if the selected difficulty is not Cataclysm, the deathiwsh checkbox is disabled
                 check_deathwish();
                 $('#dif_dropdown').on("change", function(e) {
                     check_deathwish();
