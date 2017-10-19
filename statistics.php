@@ -12,7 +12,8 @@ $rarities = select("SELECT rar_color, count(id_run) as count FROM `vw_run` GROUP
 $days = select("SELECT DATE(`run_createDtTi`) as run_date, count(id_run) as count FROM `vw_run` GROUP BY run_date ORDER by run_date DESC");
 $days = select("SELECT SUBSTRING(`run_createDtTi`, 1, 10) as run_date, count(id_run) as count FROM `vw_run` GROUP BY run_date ORDER by run_date DESC");
 $months = select("SELECT SUBSTRING(`run_createDtTi`, 1, 7) as run_date, count(id_run) as count FROM `vw_run` GROUP BY run_date ORDER by run_date DESC");
-
+// group by mods
+$mods = select("SELECT mod_name, count(id_mod) as count FROM `tbl_mod` as `mod`, tbl_run_mod as rm WHERE `mod`.id_mod = rm.rm_mod_id GROUP BY mod_name ORDER BY count DESC");
 
 $content = '<div class="uk-width-1-1">
     <div class="header">
