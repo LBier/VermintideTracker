@@ -31,13 +31,13 @@ function get_parameter($query, $parameter) {
     return null;
 }
 
-function get_sort_buttons($new_sort) {
-    global $sort, $order;
+function get_sort_buttons($new_order) {
+    global $order, $direction;
 
-    $content = '<a class="' . ($sort == $new_sort && $order == 'desc' ? 'active-link' : 'inactive-link') . '" title="Sort Down" href="index.php?sort=' . $new_sort . '&order=desc">
+    $content = '<a class="' . ($order == $new_order && $direction == 'desc' ? 'active-link' : 'inactive-link') . '" title="Sort Down" href="index.php?order=' . $new_order . '&direction=desc">
         <i class="uk-icon-chevron-down"></i>
     </a>
-    <a class="' . ($sort == $new_sort && $order == 'asc' ? 'active-link' : 'inactive-link') . '" title="Sort Up" href="index.php?sort=' . $new_sort . '&order=asc">
+    <a class="' . ($order == $new_order && $direction == 'asc' ? 'active-link' : 'inactive-link') . '" title="Sort Up" href="index.php?order=' . $new_order . '&direction=asc">
         <i class="uk-icon-chevron-up"></i>
     </a>';
 

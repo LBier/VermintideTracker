@@ -10,5 +10,5 @@ $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
 define("DEFAULT_DIFFICULTY", "Cataclysm");
 define("DEFAULT_RARITY", "Exotic");
-define("DEFAULT_SORT", "run_createDtTi");
-define("DEFAULT_ORDER", "desc");
+define("DEFAULT_ORDER", "run_createDtTi");
+define("DEFAULT_DIRECTION", "desc");

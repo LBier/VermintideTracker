@@ -4,8 +4,9 @@ $task = get_request("task");
 $id_run = get_request("id_run");
 $isset_id = isset($id_run);
 
-$sort = get_request("sort", DEFAULT_SORT);
-$order = get_request("order", DEFAULT_ORDER);
+$allowed_order = array("dif_level", "map_name", "run_duration", "pro_dice_string", "run_probabilty_red", "rar_level", "run_createDtTi", "asc", "desc");
+$order = in_array(get_request("order"), $allowed_order) ? get_request("order") : DEFAULT_ORDER;
+$direction = in_array(get_request("direction"), $allowed_order) ? get_request("direction") : DEFAULT_DIRECTION;
 
 if (!empty($task)) {
 	switch ($task) {
@@ -217,7 +218,7 @@ if (isset($task) && $task == "add") {
 } else {
 	
 	// run list
-	$query = "SELECT * FROM vw_run ORDER BY " . $sort . " " . $order;
+	$query = "SELECT * FROM vw_run ORDER BY " . $order . " " . $direction;
 	$select = $pdo->prepare($query);
 	$select->execute();
 	$runs = $select->fetchAll(PDO::FETCH_ASSOC);
