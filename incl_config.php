@@ -12,3 +12,5 @@ define("DEFAULT_DIFFICULTY", "Cataclysm");
 define("DEFAULT_RARITY", "Exotic");
 define("DEFAULT_ORDER", "run_createDtTi");
 define("DEFAULT_DIRECTION", "desc");
+
+define("DATE_FORMAT", "d.m.Y H:i");

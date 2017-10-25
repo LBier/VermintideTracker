@@ -301,7 +301,7 @@ if (isset($task) && $task == "add") {
                                 <td>' . $run['run_probability_red'] . '%</td>
                                 <td>' . $run['rar_color'] . '</td>
                                 <td>' . $run['run_notes'] . '</td>
-                                <td>' . date("d.m.Y H:i", strtotime($run['run_createDtTi'])) . '</td>
+                                <td>' . date(DATE_FORMAT, strtotime($run['run_createDtTi'])) . '</td>
                                 <td>
                                     <form action="index.php" method="post">
                                         <input type="hidden" name="task" value="delete">
