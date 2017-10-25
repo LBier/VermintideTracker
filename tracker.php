@@ -259,7 +259,7 @@ if (isset($task) && $task == "add") {
                     <col>
                     <col>
                     <col>
-                    <col>
+                    <col width="15%">
                     <col>
                     <col width="5%">
                 </colgroup>
@@ -300,7 +300,13 @@ if (isset($task) && $task == "add") {
                                 <td>' . $run['pro_dice_string'] . '</td>
                                 <td>' . $run['run_probability_red'] . '%</td>
                                 <td>' . $run['rar_color'] . '</td>
-                                <td>' . $run['run_notes'] . '</td>
+                                <td>';
+                                if (strlen($run['run_notes']) > 60) {
+                                    $content .= '<span title="' . $run['run_notes'] . '">' . mb_substr($run['run_notes'], 0, 60) . '...</span>';
+                                } else {
+                                    $content .= $run['run_notes'];
+                                }
+                                $content .= '</td>
                                 <td>' . date(DATE_FORMAT, strtotime($run['run_createDtTi'])) . '</td>
                                 <td>
                                     <form action="index.php" method="post">
