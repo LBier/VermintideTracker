@@ -21,6 +21,17 @@ $result_text = get_request("result_text", "");
         <script src="template/js/functions.js"></script>
 	</head>
 	<body>
+        <div id="navigation" class="uk-margin-top">
+            <div class="uk-tab-center">
+                <ul class="uk-tab">
+                    <?php
+                    foreach ($navigation as $navigation_page => $navigation_text) {
+                        echo '<li' . ($page == $navigation_page ? ' class="uk-active"' : '') . '><a href="index.php?page='.$navigation_page.'">' . $navigation_text . '</a></li>';
+                    }
+                    ?>
+                </ul>
+            </div>
+        </div>
 		<div id="content">
 			<div class="uk-grid uk-animation-fade">
                 <?php

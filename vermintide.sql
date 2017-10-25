@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 18. Okt 2017 um 18:26
+-- Erstellungszeit: 19. Okt 2017 um 17:40
 -- Server-Version: 10.1.13-MariaDB
 -- PHP-Version: 5.6.21
 
@@ -291,6 +291,29 @@ CREATE TABLE `tbl_run` (
   `run_createDtTi` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Daten für Tabelle `tbl_run`
+--
+
+INSERT INTO `tbl_run` (`id_run`, `run_map_id`, `run_difficulty_id`, `run_probability_id`, `run_rarity_id`, `run_duration`, `run_probability_red`, `run_notes`, `run_createDtTi`) VALUES
+(9, 1, 3, 8, 2, 25, 0.00, NULL, '2017-10-19 10:14:45'),
+(10, 2, 3, 11, 3, 28, 0.00, NULL, '2017-10-19 10:15:44'),
+(11, 3, 4, 1, 3, 19, 0.05, NULL, '2017-10-19 10:16:16'),
+(12, 4, 4, 20, 4, 28, 0.82, NULL, '2017-10-19 10:33:18'),
+(13, 5, 4, 1, 3, 14, 0.05, NULL, '2017-10-19 10:33:42'),
+(14, 6, 3, 10, 2, 21, 0.00, NULL, '2017-10-19 10:34:26'),
+(15, 7, 4, 1, 3, 16, 0.05, NULL, '2017-10-19 10:34:41'),
+(16, 8, 4, 23, 4, 24, 1.65, NULL, '2017-10-19 10:35:18'),
+(17, 9, 4, 1, 4, 16, 0.05, NULL, '2017-10-19 11:57:09'),
+(18, 10, 5, 23, 4, 23, 4.32, NULL, '2017-10-18 11:57:31'),
+(19, 11, 4, 1, 4, 18, 0.05, NULL, '2017-10-18 11:58:56'),
+(20, 12, 5, 2, 4, 15, 0.29, NULL, '2017-10-17 11:59:15'),
+(21, 13, 4, 1, 3, 25, 0.05, NULL, '2017-10-17 13:00:18'),
+(22, 8, 5, 35, 5, 22, 10.49, NULL, '2017-10-17 13:24:56'),
+(23, 14, 5, 25, 4, 27, 1.44, NULL, '2017-10-19 16:33:23'),
+(24, 17, 4, 14, 4, 22, 0.21, NULL, '2017-10-19 16:34:55'),
+(25, 21, 3, 25, 2, 26, 0.00, NULL, '2017-10-19 16:35:53');
+
 -- --------------------------------------------------------
 
 --
@@ -303,6 +326,16 @@ CREATE TABLE `tbl_run_mod` (
   `rm_mod_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Daten für Tabelle `tbl_run_mod`
+--
+
+INSERT INTO `tbl_run_mod` (`id_run_mod`, `rm_run_id`, `rm_mod_id`) VALUES
+(12, 23, 1),
+(13, 24, 3),
+(14, 25, 2),
+(15, 25, 3);
+
 -- --------------------------------------------------------
 
 --
@@ -312,6 +345,7 @@ CREATE TABLE `vw_run` (
 `id_run` int(11)
 ,`dif_name` varchar(50)
 ,`dif_level` int(11)
+,`id_map` int(11)
 ,`map_name` varchar(100)
 ,`dlc_name` varchar(100)
 ,`run_duration` int(11)
@@ -330,7 +364,7 @@ CREATE TABLE `vw_run` (
 --
 DROP TABLE IF EXISTS `vw_run`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_run`  AS  select `run`.`id_run` AS `id_run`,`dif`.`dif_name` AS `dif_name`,`dif`.`dif_level` AS `dif_level`,`map`.`map_name` AS `map_name`,`dlc`.`dlc_name` AS `dlc_name`,`run`.`run_duration` AS `run_duration`,`pro`.`pro_dice_string` AS `pro_dice_string`,`rar`.`rar_color` AS `rar_color`,`rar`.`rar_level` AS `rar_level`,`run`.`run_probability_red` AS `run_probability_red`,`run`.`run_notes` AS `run_notes`,`run`.`run_createDtTi` AS `run_createDtTi` from (((((`tbl_run` `run` join `tbl_map` `map`) join `tbl_dlc` `dlc`) join `tbl_difficulty` `dif`) join `tbl_probability` `pro`) join `tbl_rarity` `rar`) where ((`run`.`run_map_id` = `map`.`id_map`) and (`map`.`map_dlc_id` = `dlc`.`id_dlc`) and (`run`.`run_difficulty_id` = `dif`.`id_difficulty`) and (`run`.`run_probability_id` = `pro`.`id_probability`) and (`run`.`run_rarity_id` = `rar`.`id_rarity`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_run`  AS  select `run`.`id_run` AS `id_run`,`dif`.`dif_name` AS `dif_name`,`dif`.`dif_level` AS `dif_level`,`map`.`id_map` AS `id_map`,`map`.`map_name` AS `map_name`,`dlc`.`dlc_name` AS `dlc_name`,`run`.`run_duration` AS `run_duration`,`pro`.`pro_dice_string` AS `pro_dice_string`,`rar`.`rar_color` AS `rar_color`,`rar`.`rar_level` AS `rar_level`,`run`.`run_probability_red` AS `run_probability_red`,`run`.`run_notes` AS `run_notes`,`run`.`run_createDtTi` AS `run_createDtTi` from (((((`tbl_run` `run` join `tbl_map` `map`) join `tbl_dlc` `dlc`) join `tbl_difficulty` `dif`) join `tbl_probability` `pro`) join `tbl_rarity` `rar`) where ((`run`.`run_map_id` = `map`.`id_map`) and (`map`.`map_dlc_id` = `dlc`.`id_dlc`) and (`run`.`run_difficulty_id` = `dif`.`id_difficulty`) and (`run`.`run_probability_id` = `pro`.`id_probability`) and (`run`.`run_rarity_id` = `rar`.`id_rarity`)) ;
 
 --
 -- Indizes der exportierten Tabellen
@@ -442,12 +476,12 @@ ALTER TABLE `tbl_rarity`
 -- AUTO_INCREMENT für Tabelle `tbl_run`
 --
 ALTER TABLE `tbl_run`
-  MODIFY `id_run` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_run` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 --
 -- AUTO_INCREMENT für Tabelle `tbl_run_mod`
 --
 ALTER TABLE `tbl_run_mod`
-  MODIFY `id_run_mod` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_run_mod` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 --
 -- Constraints der exportierten Tabellen
 --
