@@ -14,3 +14,5 @@ define("DEFAULT_ORDER", "run_createDtTi");
 define("DEFAULT_DIRECTION", "desc");
 
 define("DATE_FORMAT", "d.m.Y H:i");
+
+$navigation = array("tracker" => "Overview", "statistics" => "Statistics");

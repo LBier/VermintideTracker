@@ -9,7 +9,6 @@ function get_map_options(dlc) {
             map_dropdown.html(data);
 
             var first_map = map_dropdown.find("option:first-child").val();
-            console.log(first_map);
             get_book_options(first_map, "grimoires");
             get_book_options(first_map, "tomes");
         }
