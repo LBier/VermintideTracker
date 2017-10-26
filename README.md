@@ -1,13 +1,13 @@
 # VermintideTracker
 
-##Installation and Configuration
+## Installation and Configuration
 
-####You have experience with MySQL, PHP and git:
+#### You have experience with MySQL, PHP and git:
 - clone the repository
 - import vermintide.sql into your MySQL database
 - set DB_PASS in incl_config.php to your MySQL root password
 
-####You have no experience:
+#### You have no experience:
 - Download XAMPP (Link: https://www.apachefriends.org/de/index.html)
 - Install XAMPP (follow the instructions)
 - Download the program as ZIP (Link: https://github.com/LBier/VermintideTracker/archive/master.zip)
@@ -19,7 +19,7 @@
 - Open http://localhost/VermintideTracker/
 - Done!
 
-####In incl_config you can change:
+#### In incl_config you can change:
 - default difficulty (pre-selected in Difficulty dropdown)
 - default item rarity (pre-selected in Rarity dropdown)
 - default order field and order direction (Overview table)
