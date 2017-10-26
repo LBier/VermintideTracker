@@ -8,9 +8,9 @@
 - set DB_PASS in incl_config.php to your MySQL root password
 
 #### You have no experience:
-- Download XAMPP (Link: https://www.apachefriends.org/de/index.html)
+- Download [XAMPP](https://www.apachefriends.org/de/index.html)
 - Install XAMPP (follow the instructions)
-- Download the program as ZIP (Link: https://github.com/LBier/VermintideTracker/archive/master.zip)
+- Download the program as [ZIP](https://github.com/LBier/VermintideTracker/archive/master.zip)
 - Extract VermintideTracker-master.zip to C:\xampp\htdocs
 - Change the name of the extracted folder to VermintideTracker
 - Open the XAMPP Control Panel and start Apache and MySQL
