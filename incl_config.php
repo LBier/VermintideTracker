@@ -12,6 +12,8 @@ $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 define("DEFAULT_DIFFICULTY", "Cataclysm");
 /* Plentiful (White), Common (Green), Rare (Blue), Exotic (Orange), Veteran (Red) */
 define("DEFAULT_RARITY", "Exotic");
+/* Victor Saltspyre, Kerillian, Bardin Goreksson, Sienna Fuegonasus, Markus Kruber */
+define("DEFAULT_HERO", "");
 
 /* possible order fields
 dif_level
