@@ -4,9 +4,12 @@ $task = get_request("task");
 $id_run = get_request("id_run");
 $isset_id = isset($id_run);
 
+// Since PDO doesn't support column names for preparing, the order has to be in $allowed_order. This way SQL-Injections are not possible
 $allowed_order = array("dif_level", "map_name", "run_duration", "pro_dice_string", "run_probabilty_red", "rar_level", "run_createDtTi", "asc", "desc");
-$order = in_array(get_request("order"), $allowed_order) ? get_request("order") : DEFAULT_ORDER;
-$direction = in_array(get_request("direction"), $allowed_order) ? get_request("direction") : DEFAULT_DIRECTION;
+$request_order = get_request("order");
+$order = in_array($request_order, $allowed_order) ? $request_order : DEFAULT_ORDER;
+$request_direction = get_request("direction");
+$direction = in_array($request_direction, $allowed_order) ? $request_direction : DEFAULT_DIRECTION;
 
 if (!empty($task)) {
 	switch ($task) {
