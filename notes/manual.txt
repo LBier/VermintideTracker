@@ -19,4 +19,4 @@ In incl_config you can change
 -default difficulty (pre-selected in Difficulty dropdown)
 -default item rarity (pre-selected in Rarity dropdown)
 -default order field and order direction (Overview table)
--date format (e.g. "m/d/Y H:i" for you crazy Americans)
+-date format (e.g. "m/d/Y H:i" for Americans or "Y-m-d H:i")
