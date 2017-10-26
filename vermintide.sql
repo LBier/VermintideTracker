@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 26. Okt 2017 um 16:43
+-- Erstellungszeit: 26. Okt 2017 um 17:59
 -- Server-Version: 10.1.13-MariaDB
 -- PHP-Version: 5.6.21
 
@@ -67,7 +67,30 @@ INSERT INTO `tbl_dlc` (`id_dlc`, `dlc_name`, `dlc_maps`, `dlc_release_date`) VAL
 (2, 'Drachenfels', 3, '2016-05-26'),
 (3, 'Karak Azgaraz', 3, '2016-12-15'),
 (4, 'Stromdorf', 2, '2017-05-04'),
-(5, 'Death on the Reik', 2, '2017-10-19');
+(5, 'Death on the Reik', 2, '2017-10-31');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `tbl_hero`
+--
+
+CREATE TABLE `tbl_hero` (
+  `id_hero` int(11) NOT NULL,
+  `hero_name` varchar(100) NOT NULL,
+  `hero_class` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Daten für Tabelle `tbl_hero`
+--
+
+INSERT INTO `tbl_hero` (`id_hero`, `hero_name`, `hero_class`) VALUES
+(1, 'Victor Saltzpyre', 'Witch Hunter'),
+(2, 'Kerillian', 'Waywatcher'),
+(3, 'Bardin Goreksson', 'Dwarf Ranger'),
+(4, 'Sienna Fuegonasus', 'Bright Wizard'),
+(5, 'Markus Kruber', 'Empire Soldier');
 
 -- --------------------------------------------------------
 
@@ -282,6 +305,7 @@ INSERT INTO `tbl_rarity` (`id_rarity`, `rar_name`, `rar_color`, `rar_level`) VAL
 
 CREATE TABLE `tbl_run` (
   `id_run` int(11) NOT NULL,
+  `run_hero_id` int(11) NOT NULL,
   `run_map_id` int(11) NOT NULL,
   `run_difficulty_id` int(11) NOT NULL,
   `run_probability_id` int(11) NOT NULL,
@@ -311,16 +335,18 @@ CREATE TABLE `tbl_run_mod` (
 --
 CREATE TABLE `vw_run` (
 `id_run` int(11)
-,`dif_name` varchar(50)
-,`dif_level` int(11)
+,`hero_name` varchar(100)
+,`hero_class` varchar(100)
 ,`map_name` varchar(100)
 ,`map_order` int(11)
 ,`dlc_name` varchar(100)
-,`run_duration` int(11)
+,`dif_name` varchar(50)
+,`dif_level` int(11)
 ,`pro_dice_string` varchar(8)
 ,`rar_color` varchar(50)
 ,`rar_level` int(11)
 ,`run_probability_red` double(4,2)
+,`run_duration` int(11)
 ,`run_notes` text
 ,`run_createDtTi` datetime
 );
@@ -332,7 +358,7 @@ CREATE TABLE `vw_run` (
 --
 DROP TABLE IF EXISTS `vw_run`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_run`  AS  select `run`.`id_run` AS `id_run`,`dif`.`dif_name` AS `dif_name`,`dif`.`dif_level` AS `dif_level`,`map`.`map_name` AS `map_name`,`map`.`map_order` AS `map_order`,`dlc`.`dlc_name` AS `dlc_name`,`run`.`run_duration` AS `run_duration`,`pro`.`pro_dice_string` AS `pro_dice_string`,`rar`.`rar_color` AS `rar_color`,`rar`.`rar_level` AS `rar_level`,`run`.`run_probability_red` AS `run_probability_red`,`run`.`run_notes` AS `run_notes`,`run`.`run_createDtTi` AS `run_createDtTi` from (((((`tbl_run` `run` join `tbl_map` `map`) join `tbl_dlc` `dlc`) join `tbl_difficulty` `dif`) join `tbl_probability` `pro`) join `tbl_rarity` `rar`) where ((`run`.`run_map_id` = `map`.`id_map`) and (`map`.`map_dlc_id` = `dlc`.`id_dlc`) and (`run`.`run_difficulty_id` = `dif`.`id_difficulty`) and (`run`.`run_probability_id` = `pro`.`id_probability`) and (`run`.`run_rarity_id` = `rar`.`id_rarity`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_run`  AS  select `run`.`id_run` AS `id_run`,`hero`.`hero_name` AS `hero_name`,`hero`.`hero_class` AS `hero_class`,`map`.`map_name` AS `map_name`,`map`.`map_order` AS `map_order`,`dlc`.`dlc_name` AS `dlc_name`,`dif`.`dif_name` AS `dif_name`,`dif`.`dif_level` AS `dif_level`,`pro`.`pro_dice_string` AS `pro_dice_string`,`rar`.`rar_color` AS `rar_color`,`rar`.`rar_level` AS `rar_level`,`run`.`run_probability_red` AS `run_probability_red`,`run`.`run_duration` AS `run_duration`,`run`.`run_notes` AS `run_notes`,`run`.`run_createDtTi` AS `run_createDtTi` from ((((((`tbl_run` `run` join `tbl_hero` `hero`) join `tbl_map` `map`) join `tbl_dlc` `dlc`) join `tbl_difficulty` `dif`) join `tbl_probability` `pro`) join `tbl_rarity` `rar`) where ((`run`.`run_hero_id` = `hero`.`id_hero`) and (`run`.`run_map_id` = `map`.`id_map`) and (`map`.`map_dlc_id` = `dlc`.`id_dlc`) and (`run`.`run_difficulty_id` = `dif`.`id_difficulty`) and (`run`.`run_probability_id` = `pro`.`id_probability`) and (`run`.`run_rarity_id` = `rar`.`id_rarity`)) ;
 
 --
 -- Indizes der exportierten Tabellen
@@ -349,6 +375,12 @@ ALTER TABLE `tbl_difficulty`
 --
 ALTER TABLE `tbl_dlc`
   ADD PRIMARY KEY (`id_dlc`);
+
+--
+-- Indizes für die Tabelle `tbl_hero`
+--
+ALTER TABLE `tbl_hero`
+  ADD PRIMARY KEY (`id_hero`);
 
 --
 -- Indizes für die Tabelle `tbl_map`
@@ -390,7 +422,8 @@ ALTER TABLE `tbl_run`
   ADD KEY `run_probability_id` (`run_probability_id`) USING BTREE,
   ADD KEY `run_map_id` (`run_map_id`) USING BTREE,
   ADD KEY `run_difficulty_id` (`run_difficulty_id`) USING BTREE,
-  ADD KEY `run_rarity_id` (`run_rarity_id`);
+  ADD KEY `run_rarity_id` (`run_rarity_id`),
+  ADD KEY `run_hero_id` (`run_hero_id`);
 
 --
 -- Indizes für die Tabelle `tbl_run_mod`
@@ -415,6 +448,11 @@ ALTER TABLE `tbl_difficulty`
 --
 ALTER TABLE `tbl_dlc`
   MODIFY `id_dlc` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+--
+-- AUTO_INCREMENT für Tabelle `tbl_hero`
+--
+ALTER TABLE `tbl_hero`
+  MODIFY `id_hero` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT für Tabelle `tbl_map`
 --
@@ -444,12 +482,12 @@ ALTER TABLE `tbl_rarity`
 -- AUTO_INCREMENT für Tabelle `tbl_run`
 --
 ALTER TABLE `tbl_run`
-  MODIFY `id_run` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id_run` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT für Tabelle `tbl_run_mod`
 --
 ALTER TABLE `tbl_run_mod`
-  MODIFY `id_run_mod` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_run_mod` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- Constraints der exportierten Tabellen
 --
@@ -467,7 +505,8 @@ ALTER TABLE `tbl_run`
   ADD CONSTRAINT `tbl_run_ibfk_1` FOREIGN KEY (`run_map_id`) REFERENCES `tbl_map` (`id_map`),
   ADD CONSTRAINT `tbl_run_ibfk_2` FOREIGN KEY (`run_difficulty_id`) REFERENCES `tbl_difficulty` (`id_difficulty`),
   ADD CONSTRAINT `tbl_run_ibfk_3` FOREIGN KEY (`run_probability_id`) REFERENCES `tbl_probability` (`id_probability`),
-  ADD CONSTRAINT `tbl_run_ibfk_4` FOREIGN KEY (`run_rarity_id`) REFERENCES `tbl_rarity` (`id_rarity`);
+  ADD CONSTRAINT `tbl_run_ibfk_4` FOREIGN KEY (`run_rarity_id`) REFERENCES `tbl_rarity` (`id_rarity`),
+  ADD CONSTRAINT `tbl_run_ibfk_5` FOREIGN KEY (`run_hero_id`) REFERENCES `tbl_hero` (`id_hero`);
 
 --
 -- Constraints der Tabelle `tbl_run_mod`

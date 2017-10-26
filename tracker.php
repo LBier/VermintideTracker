@@ -5,7 +5,7 @@ $id_run = get_request("id_run");
 $isset_id = isset($id_run);
 
 // Since PDO doesn't support column names for preparing, the order has to be in $allowed_order. This way SQL-Injections are not possible
-$allowed_order = array("dif_level", "map_name", "run_duration", "pro_dice_string", "run_probabilty_red", "rar_level", "run_createDtTi", "asc", "desc");
+$allowed_order = array("hero_name", "dif_level", "map_name", "run_duration", "pro_dice_string", "run_probabilty_red", "rar_level", "run_createDtTi", "asc", "desc");
 $request_order = get_request("order");
 $order = in_array($request_order, $allowed_order) ? $request_order : DEFAULT_ORDER;
 $request_direction = get_request("direction");
@@ -52,6 +52,7 @@ if (!empty($task)) {
                 if ($probability !== false) {
                     // prepare inputs
                     $inputs = array();
+                    $inputs['run_hero_id'] = (int)$_POST['run']['hero_id'];
                     $inputs['run_map_id'] = (int)$_POST['run']['map_id'];
                     $inputs['run_difficulty_id'] = (int)$_POST['run']['difficulty_id'];
                     $inputs['run_probability_id'] = (int)$probability->id_probability;
@@ -70,8 +71,8 @@ if (!empty($task)) {
                     $inputs['run_notes'] = empty($_POST['run']['notes']) ? null : $_POST['run']['notes'];
 
                     // save run
-                    $query = "INSERT INTO tbl_run (run_map_id, run_difficulty_id, run_probability_id, run_rarity_id, run_duration, run_probability_red, run_notes) ";
-                    $query .= "VALUES (:run_map_id, :run_difficulty_id, :run_probability_id, :run_rarity_id, :run_duration, :run_probability_red, :run_notes)";
+                    $query = "INSERT INTO tbl_run (run_hero_id, run_map_id, run_difficulty_id, run_probability_id, run_rarity_id, run_duration, run_probability_red, run_notes) ";
+                    $query .= "VALUES (:run_hero_id, :run_map_id, :run_difficulty_id, :run_probability_id, :run_rarity_id, :run_duration, :run_probability_red, :run_notes)";
                     $insert = $pdo->prepare($query);
                     $result = $insert->execute($inputs);
 
@@ -124,6 +125,13 @@ if (!empty($result_text)) {
 
 if (isset($task) && $task == "add") {
 
+    $heroes = select("SELECT * FROM tbl_hero");
+    $hero_dropdown = '<select id="hero_dropdown" class="uk-select uk-width-1-1" name="run[hero_id]">';
+    foreach ($heroes as $hero) {
+        $hero_dropdown .= '<option value="' . $hero['id_hero'] . '" ' . ($hero['hero_name'] == DEFAULT_HERO ? 'selected' : '') . '>' . $hero['hero_name'] . '</option>';
+    }
+    $hero_dropdown .= '</select>';
+
     $dlcs = select("SELECT * FROM tbl_dlc WHERE (SELECT count(id_map) FROM tbl_map WHERE map_dlc_id = id_dlc) > 0");
     $dlc_dropdown = '<select id="dlc_dropdown" class="uk-select uk-width-1-1" name="dlc">';
     foreach ($dlcs as $dlc) {
@@ -162,11 +170,15 @@ if (isset($task) && $task == "add") {
         <div class="body">
             <form class="uk-form uk-form-stacked" action="index.php" method="post">
                 <div class="uk-grid uk-grid-medium" data-uk-grid-margin>
-                    <div class="uk-width-1-2">
+                    <div class="uk-width-1-3">
+                        <label>Hero</label>
+                        ' . $hero_dropdown . '
+                    </div>
+                    <div class="uk-width-1-3">
                         <label>DLC</label>
                         ' . $dlc_dropdown . '
                     </div>
-                    <div class="uk-width-1-2">
+                    <div class="uk-width-1-3">
                         <label>Map</label>
                         <select id="map_dropdown" class="uk-select uk-width-1-1" name="run[map_id]">
                         </select>
@@ -262,12 +274,14 @@ if (isset($task) && $task == "add") {
                     <col>
                     <col>
                     <col>
+                    <col>
                     <col width="15%">
                     <col>
                     <col width="5%">
                 </colgroup>
                 <thead>
                     <tr>
+                        <th>' . get_sort_buttons("hero_name") . '</th>
                         <th>' . get_sort_buttons("dif_level") . '</th>
                         <th></th>
                         <th>' . get_sort_buttons("map_name") . '</th>
@@ -280,6 +294,7 @@ if (isset($task) && $task == "add") {
                         <th></th>
                     </tr>
                     <tr>
+                        <th>Hero</th>
                         <th>Difficulty</th>
                         <th>Mods</th>
                         <th>Map</th>
@@ -296,6 +311,7 @@ if (isset($task) && $task == "add") {
                     if (!empty($runs)) {
                         foreach ($runs as &$run) {
                             $content .= '<tr>
+                                <td>' . $run['hero_name'] . '</td>
                                 <td>' . $run['dif_name'] . '</td>
                                 <td>' . $run['rendered_mods'] . '</td>
                                 <td>' . $run['map_name'] . '</td>
@@ -321,7 +337,7 @@ if (isset($task) && $task == "add") {
                             </tr>';
                         }
                     } else {
-                        $content .= '<tr><td colspan="10">No runs available</td></tr>';
+                        $content .= '<tr><td colspan="11">No runs available</td></tr>';
                     }
                 $content .= '</tbody>
             </table>
