@@ -1,7 +1,9 @@
 <?php
 
 // runs, sums and averages
-$general = select("SELECT count(id_run), sum(run_duration), avg(run_duration), sum(run_probability_red), avg(run_probability_red) FROM `vw_run`");
+$q = "SELECT count(id_run) as run_count, sum(run_duration) as duration_sum, avg(run_duration) as duration_avg,
+sum(run_probability_red) as probability_red_sum, avg(run_probability_red) as probability_red_avg FROM `vw_run`";
+$general = select($q);
 // group by map
 $maps = select("SELECT map_name, count(id_run) as count FROM `vw_run` GROUP BY map_name ORDER BY count DESC, id_map ASC");
 // group by difficulty
