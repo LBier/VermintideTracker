@@ -302,7 +302,7 @@ if (isset($task) && $task == "add") {
                         <th>Mods</th>
                         <th>Map</th>
                         <th>Duration</th>
-                        <th>Dice</th>
+                        <th title="Short form for the number of Grimoire, Tome, Extra and Normal Dice">Dice</th>
                         <th>red %</th>
                         <th>Item Rarity</th>
                         <th>Notes</th>
