@@ -89,6 +89,7 @@ if (!empty($task)) {
 
                         $result_text .= "Run has been saved";
                         header("Location: index.php?result_text=" . $result_text);
+                        exit;
                     } else {
                         $result_text .= "Error saving run";
                     }
