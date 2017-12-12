@@ -15,7 +15,7 @@
 - Change the name of the extracted folder to VermintideTracker
 - Open the XAMPP Control Panel and start Apache and MySQL
 - Open http://localhost/phpmyadmin/ in your browser
-- Click the Tab Import, click Choose File, navigate to C:\xampp\htdocs\VermintideTracker\ and open vermintide.sql, click OK
+- Click the Tab Import, click Choose File, navigate to C:\xampp\htdocs\VermintideTracker\ and select vermintide.sql, click OK
 - Open http://localhost/VermintideTracker/
 - Done!
 
