@@ -48,6 +48,25 @@ $result_text = get_request("result_text", "");
         <script>
             $( document ).ready(function() {
 
+                $('.delete-run').click(function () {
+                    if (confirm('Delete run?')) {
+                        var id_run = $(this).data("id_run");
+                        $.ajax({
+                            type: "POST",
+                            url: "ajax/delete_run.php",
+                            data: {"id_run": id_run},
+                            success: function(data) {
+                                if (data === "OK") {
+                                    $('#run-' + id_run).remove();
+                                    alert("Run has been deleted.");
+                                } else {
+                                    alert("Error deleting run");
+                                }
+                            }
+                        });
+                    }
+                });
+
                 var dlc_dropdown = $('#dlc_dropdown');
                 var first_dlc = dlc_dropdown.find("option:first-child").val();
 

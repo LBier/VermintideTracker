@@ -6,17 +6,18 @@ $isset_id = isset($id_run);
 
 // Since PDO doesn't support column names for preparing, the order has to be in $allowed_order. This way SQL-Injections are not possible
 $allowed_order = array("hero_name", "dif_level", "map_name", "run_duration", "pro_dice_string", "run_probabilty_red", "rar_level", "run_createDtTi", "asc", "desc");
-$request_order = get_request("order");
-$order = in_array($request_order, $allowed_order) ? $request_order : DEFAULT_ORDER;
-$request_direction = get_request("direction");
-$direction = in_array($request_direction, $allowed_order) ? $request_direction : DEFAULT_DIRECTION;
+
+$key_order = array_search(get_request("order"), $allowed_order);
+$key_direction = array_search(get_request("direction"), $allowed_order);
+
+$order = $key_order !== false ? $allowed_order[$key_order] : DEFAULT_ORDER;
+$direction = $key_direction !== false ? $allowed_order[$key_direction] : DEFAULT_DIRECTION;
 
 if (!empty($task)) {
 	switch ($task) {
 		case "add":
 			if (!empty($_POST['submit']) && $_POST['submit'] == 'Add') {
 			    // get parameter
-                $cata_prob_red_on_6 = (int)get_parameter("SELECT par_value FROM tbl_parameter WHERE par_name = 'cata_prob_red_on_6'", "par_value");
                 $pro_extra_grimoire_dice = 0;
                 if (!empty($_POST['mod'])) {
                     foreach ($_POST['mod'] as $id_mod => $mod_extra_grimoire_dice) {
@@ -60,6 +61,7 @@ if (!empty($task)) {
                     $inputs['run_duration'] = (int)$_POST['run']['duration'];
                     switch ($inputs['run_difficulty_id']) {
                         case 5:
+                            $cata_prob_red_on_6 = (int)get_parameter("SELECT par_value FROM tbl_parameter WHERE par_name = 'cata_prob_red_on_6'", "par_value");
                             $inputs['run_probability_red'] = round((float)$probability->pro_probability_seven + ((float)$probability->pro_probability_six * $cata_prob_red_on_6 / 100), 2);
                             break;
                         case 4:
@@ -87,6 +89,7 @@ if (!empty($task)) {
 
                         $result_text .= "Run has been saved";
                         header("Location: index.php?result_text=" . $result_text);
+                        exit;
                     } else {
                         $result_text .= "Error saving run";
                     }
@@ -95,18 +98,18 @@ if (!empty($task)) {
                 }
 			}
 			break;
-		case "delete":
-			if ($isset_id) {
-				$delete = $pdo->prepare("DELETE FROM tbl_run WHERE id_run = :id_run");
-				$result = $delete->execute(array("id_run" => $id_run));
-				
-				if ($result === true) {
-					$result_text .= "Run has been deleted.";
-				} else {
-					$result_text .= "Error deleting run.";
-				}
-			}
-			break;
+//		case "delete":
+//			if ($isset_id) {
+//				$delete = $pdo->prepare("DELETE FROM tbl_run WHERE id_run = :id_run");
+//				$result = $delete->execute(array("id_run" => $id_run));
+//
+//				if ($result === true) {
+//					$result_text .= "Run has been deleted.";
+//				} else {
+//					$result_text .= "Error deleting run.";
+//				}
+//			}
+//			break;
 	}
 }
 
@@ -275,7 +278,7 @@ if (isset($task) && $task == "add") {
                     <col>
                     <col>
                     <col>
-                    <col width="15%">
+                    <col width="10%">
                     <col>
                     <col width="5%">
                 </colgroup>
@@ -299,7 +302,7 @@ if (isset($task) && $task == "add") {
                         <th>Mods</th>
                         <th>Map</th>
                         <th>Duration</th>
-                        <th>Dice</th>
+                        <th title="Short form for the number of Grimoire, Tome, Extra and Normal Dice">Dice</th>
                         <th>red %</th>
                         <th>Item Rarity</th>
                         <th>Notes</th>
@@ -310,7 +313,7 @@ if (isset($task) && $task == "add") {
                 <tbody>';
                     if (!empty($runs)) {
                         foreach ($runs as &$run) {
-                            $content .= '<tr>
+                            $content .= '<tr id="run-' . $run['id_run'] . '">
                                 <td>' . $run['hero_name'] . '</td>
                                 <td>' . $run['dif_name'] . '</td>
                                 <td>' . $run['rendered_mods'] . '</td>
@@ -328,11 +331,7 @@ if (isset($task) && $task == "add") {
                                 $content .= '</td>
                                 <td>' . date(DATE_FORMAT, strtotime($run['run_createDtTi'])) . '</td>
                                 <td>
-                                    <form action="index.php" method="post">
-                                        <input type="hidden" name="task" value="delete">
-                                        <input type="hidden" name="id_run" value="' . $run['id_run'] . '">
-                                        <button class="uk-button-secondary" type="submit" title="Delete" onClick="return confirm(\'Delete run?\')"><i class="uk-icon-trash"></i></button>
-                                    </form>
+                                    <button class="uk-button-secondary delete-run" title="Delete" data-id_run="' . $run['id_run'] . '"><i class="uk-icon-trash"></i></button>
                                 </td>
                             </tr>';
                         }

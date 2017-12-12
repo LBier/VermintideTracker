@@ -45,7 +45,7 @@ function get_sort_buttons($new_order) {
 }
 
 function render_table($head, $rows) {
-    $table = '<table class="uk-table uk-table-striped">
+    $table = '<table class="uk-table uk-table-striped uk-margin-bottom">
         <thead>
             <tr>';
             foreach ($head as $value) {
@@ -65,4 +65,13 @@ function render_table($head, $rows) {
     </table>';
 
     return $table;
+}
+
+function convertMinsToHoursMins($time, $format = '%02d:%02d') {
+    if ($time < 1) {
+        return null;
+    }
+    $hours = floor($time / 60);
+    $minutes = ($time % 60);
+    return sprintf($format, $hours, $minutes);
 }
