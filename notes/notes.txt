@@ -1,13 +1,3 @@
-pr_grimoire_dice,pr_tome_dice,pr_extra_dice,pr_normal_dice,pr_probability_zero,pr_probability_one,pr_probability_two,pr_probability_three,pr_probability_four,pr_probability_five,pr_probability_six,pr_probability_seven
-
-SELECT *, (`pr_probability_zero`+`pr_probability_one`+`pr_probability_two`+`pr_probability_three`+`pr_probability_four`+`pr_probability_five`+`pr_probability_six`+`pr_probability_seven`) as sum FROM `probability`
-
-CREATE TABLE `vermintide`.`tbl_mod` ( `id_mod` INT(11) NOT NULL AUTO_INCREMENT , `mo_name` VARCHAR(50) NOT NULL , `mo_description` VARCHAR(200) NOT NULL , `mo_extra_dice` INT(11) NOT NULL , PRIMARY KEY (`id_mod`)) ENGINE = InnoDB;
-
-CREATE TABLE `vermintide`.`tbl_map` ( `id_map` INT NOT NULL AUTO_INCREMENT , `map_dlc_id` INT NOT NULL , `map_name` VARCHAR(100) NOT NULL , `map_name_intern` VARCHAR(100) NOT NULL , `map_grimoires` INT NOT NULL , `map_tomes` INT NOT NULL , `map_chests` INT NOT NULL , PRIMARY KEY (`id_map`), INDEX (`map_dlc_id`)) ENGINE = InnoDB;
-
-CREATE TABLE `vermintide`.`tbl_dlc` ( `id_dlc` INT NOT NULL AUTO_INCREMENT , `dlc_name` VARCHAR(100) NOT NULL , PRIMARY KEY (`id_dlc`)) ENGINE = InnoDB;
-
 // großer View
 SELECT id_run, dif_name, map_name, dlc_name, run_length, pro_dice_string, run_probability_red, run_createDtTi
 FROM tbl_run as run, tbl_map as map, tbl_dlc as dlc, tbl_difficulty as dif, tbl_probability as pro
@@ -17,9 +7,7 @@ AND run.run_difficulty_id = dif.id_difficulty
 AND run.run_probability_id = pro.id_probability
 
 // View as it is in MySQL
-select `run`.`id_run` AS `id_run`,`hero`.`hero_name` AS `hero_name`,`hero`.`hero_class` AS `hero_class`,`map`.`map_name` AS `map_name`,`map`.`map_order` AS `map_order`,`dlc`.`dlc_name` AS `dlc_name`,`dif`.`dif_name` AS `dif_name`,`dif`.`dif_level` AS `dif_level`,`pro`.`pro_dice_string` AS `pro_dice_string`,`rar`.`rar_color` AS `rar_color`,`rar`.`rar_level` AS `rar_level`,`run`.`run_probability_red` AS `run_probability_red`,`run`.`run_duration` AS `run_duration`,`run`.`run_notes` AS `run_notes`,`run`.`run_createDtTi` AS `run_createDtTi`
-from ((((((`vermintide`.`tbl_run` `run` join `vermintide`.`tbl_hero` `hero`) join `vermintide`.`tbl_map` `map`) join `vermintide`.`tbl_dlc` `dlc`) join `vermintide`.`tbl_difficulty` `dif`) join `vermintide`.`tbl_probability` `pro`) join `vermintide`.`tbl_rarity` `rar`)
-where ((`run`.`run_hero_id` = `hero`.`id_hero`) and (`run`.`run_map_id` = `map`.`id_map`) and (`map`.`map_dlc_id` = `dlc`.`id_dlc`) and (`run`.`run_difficulty_id` = `dif`.`id_difficulty`) and (`run`.`run_probability_id` = `pro`.`id_probability`) and (`run`.`run_rarity_id` = `rar`.`id_rarity`))
+select `run`.`id_run` AS `id_run`,`user`.`id_user` AS `user_id`,`user`.`user_name` AS `user_name`,`hero`.`hero_name` AS `hero_name`,`hero`.`hero_class` AS `hero_class`,`map`.`map_name` AS `map_name`,`map`.`map_order` AS `map_order`,`dlc`.`dlc_name` AS `dlc_name`,`dif`.`dif_name` AS `dif_name`,`dif`.`dif_level` AS `dif_level`,`pro`.`pro_dice_string` AS `pro_dice_string`,`rar`.`rar_color` AS `rar_color`,`rar`.`rar_level` AS `rar_level`,`run`.`run_probability_red` AS `run_probability_red`,`run`.`run_duration` AS `run_duration`,`run`.`run_notes` AS `run_notes`,`run`.`run_createDtTi` AS `run_createDtTi` from (((((((`vermintide`.`tbl_run` `run` join `vermintide`.`tbl_user` `user`) join `vermintide`.`tbl_hero` `hero`) join `vermintide`.`tbl_map` `map`) join `vermintide`.`tbl_dlc` `dlc`) join `vermintide`.`tbl_difficulty` `dif`) join `vermintide`.`tbl_probability` `pro`) join `vermintide`.`tbl_rarity` `rar`) where ((`run`.`run_user_id` = `user`.`id_user`) and (`run`.`run_hero_id` = `hero`.`id_hero`) and (`run`.`run_map_id` = `map`.`id_map`) and (`map`.`map_dlc_id` = `dlc`.`id_dlc`) and (`run`.`run_difficulty_id` = `dif`.`id_difficulty`) and (`run`.`run_probability_id` = `pro`.`id_probability`) and (`run`.`run_rarity_id` = `rar`.`id_rarity`))
 
 SELECT CONCAT(`pro_grimoire_dice`, 'g', `pro_tome_dice`, 't', `pro_extra_dice`, 'e', `pro_normal_dice`, 'n') FROM tbl_probability
 UPDATE tbl_probability SET pro_dice_string = CONCAT(`pro_grimoire_dice`, 'g', `pro_tome_dice`, 't', `pro_extra_dice`, 'e', `pro_normal_dice`, 'n')
@@ -28,7 +16,6 @@ SELECT * FROM tbl_map as map, tbl_dlc as dlc WHERE dlc.id_dlc = map.map_dlc_id
 
 
 // Statistik-Queries
-
 // runs, sums and averages
 SELECT count(id_run), sum(run_duration), avg(run_duration), sum(run_probability_red), avg(run_probability_red) FROM `vw_run`
 // group by map

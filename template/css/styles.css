@@ -7,6 +7,10 @@ html {
     font: 300 14px/18px "Open Sans", sans-serif;
 }
 
+body {
+    min-height: 100vh;
+}
+
 .active-link {
     pointer-events: none;
     text-decoration: none;
@@ -53,12 +57,8 @@ html {
 }
 #content {
     box-sizing: border-box;
-    min-height: 100vh;
     padding: 40px;
     position: relative;
-}
-#result_text {
-	color: red;
 }
 .uk-button:hover {
     background-color: #ccc;
@@ -69,4 +69,9 @@ html {
 }
 .uk-card-primary {
     background-color: #be160b;
+}
+
+#block {
+    width: 40%;
+    padding: 30px 50px 30px 50px;
 }

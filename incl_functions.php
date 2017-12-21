@@ -13,11 +13,16 @@ function get_request($key, $default = null) {
 	return $default;
 }
 
-function select($query) {
+function redirect($url) {
+    header('Location: ' . $url);
+    exit;
+}
+
+function select($query, $params = null) {
     global $pdo;
 
     $select = $pdo->prepare($query);
-    $select->execute();
+    $select->execute($params);
 
     return $select->fetchAll(PDO::FETCH_ASSOC);
 }

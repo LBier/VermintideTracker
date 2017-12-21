@@ -8,6 +8,13 @@ define('DB_PASS', "");
 $pdo = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME.';charset=utf8', DB_USER, DB_PASS);
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
 
+//$db = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+//$db->set_charset("utf8");
+
+define('HTTP_PROTOCOL', (isset($_SERVER['HTTPS']) === true && $_SERVER['HTTPS'] === 'on') ? 'https://' : 'http://');
+define('HTTP_HOST', $_SERVER['SERVER_NAME']);
+define('HTTP_HOST_URL', HTTP_PROTOCOL . HTTP_HOST);
+
 /* Easy, Normal, Hard, Nightmare, Cataclysm */
 define("DEFAULT_DIFFICULTY", "Cataclysm");
 /* Plentiful (White), Common (Green), Rare (Blue), Exotic (Orange), Veteran (Red) */

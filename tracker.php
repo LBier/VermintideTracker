@@ -53,6 +53,7 @@ if (!empty($task)) {
                 if ($probability !== false) {
                     // prepare inputs
                     $inputs = array();
+                    $inputs['run_user_id'] = (int)$_SESSION['user']['id'];
                     $inputs['run_hero_id'] = (int)$_POST['run']['hero_id'];
                     $inputs['run_map_id'] = (int)$_POST['run']['map_id'];
                     $inputs['run_difficulty_id'] = (int)$_POST['run']['difficulty_id'];
@@ -73,8 +74,8 @@ if (!empty($task)) {
                     $inputs['run_notes'] = empty($_POST['run']['notes']) ? null : $_POST['run']['notes'];
 
                     // save run
-                    $query = "INSERT INTO tbl_run (run_hero_id, run_map_id, run_difficulty_id, run_probability_id, run_rarity_id, run_duration, run_probability_red, run_notes) ";
-                    $query .= "VALUES (:run_hero_id, :run_map_id, :run_difficulty_id, :run_probability_id, :run_rarity_id, :run_duration, :run_probability_red, :run_notes)";
+                    $query = "INSERT INTO tbl_run (run_user_id, run_hero_id, run_map_id, run_difficulty_id, run_probability_id, run_rarity_id, run_duration, run_probability_red, run_notes) ";
+                    $query .= "VALUES (:run_user_id, :run_hero_id, :run_map_id, :run_difficulty_id, :run_probability_id, :run_rarity_id, :run_duration, :run_probability_red, :run_notes)";
                     $insert = $pdo->prepare($query);
                     $result = $insert->execute($inputs);
 
@@ -88,8 +89,7 @@ if (!empty($task)) {
                         }
 
                         $result_text .= "Run has been saved";
-                        header("Location: index.php?result_text=" . $result_text);
-                        exit;
+                        redirect("index.php?result_text=" . $result_text);
                     } else {
                         $result_text .= "Error saving run";
                     }
@@ -236,9 +236,9 @@ if (isset($task) && $task == "add") {
 } else {
 	
 	// run list
-	$query = "SELECT * FROM vw_run ORDER BY " . $order . " " . $direction;
+	$query = "SELECT * FROM vw_run WHERE user_id = :user_id ORDER BY " . $order . " " . $direction;
 	$select = $pdo->prepare($query);
-	$select->execute();
+	$select->execute(array("user_id" => $_SESSION['user']['id']));
 	$runs = $select->fetchAll(PDO::FETCH_ASSOC);
 	
 	if (!empty($runs)) {
